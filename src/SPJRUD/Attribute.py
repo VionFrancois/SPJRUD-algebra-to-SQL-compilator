@@ -1,5 +1,3 @@
-
-
 class Attribute(object):
     """
     Représente tous les attributs de toutes les relations. 

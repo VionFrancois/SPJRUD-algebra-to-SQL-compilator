@@ -6,13 +6,12 @@ class Relation(object):
         self.tuples = tuples
 
     def __str__(self) -> str:
-        length = 0
+        length = len(f"{self.attributes[0] : <15} |") * len(self.attributes)
+
         s = "|"
         
         for i in range(0, len(self.attributes)):
             s += f"{self.attributes[i].upper() : <15} |"
-            if(i == 0):
-                length = len(f"{self.attributes[i] : <15} |") * len(self.attributes)
         
         s += "\n" + "-" * (length + 1) + "\n"
 
@@ -23,12 +22,4 @@ class Relation(object):
             s += "\n"
         
         s = "-" * (length + 1) + "\n" + s + "-" * (length + 1 )+ "\n"
-        
         return s
-    
-
-
-attr = ["nom", "prenom", "age"]
-tupl = [("julien", "ladeuze", "18"), ("murielle", "pattyn", "54")]
-r = Relation(attr, tupl)
-print(r)
