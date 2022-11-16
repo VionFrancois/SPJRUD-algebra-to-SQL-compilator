@@ -1,15 +1,15 @@
-from Attribute import Attribute
-from Relation import Relation
+from AlgebraObjects.Attribute import Attribute
+from AlgebraObjects.Relation import Relation
 
-class Expression(Attribute): #TODO doit encore implementer le fait d'extends d'attribut
+class Expression(): #TODO doit encore implementer le fait d'extends d'attribut
     """
     Représente tous les expressions de SPJRUD.
     Inutilisable pour les moments -> voir classe(s) enfant(es)
     """
-    def __init__(self, first_attr : Attribute, second_attr : Attribute, relation : Relation) -> None:
+    def __init__(self, first_attr : Attribute, second_attr : Attribute, third_attr : Attribute) -> None:
         self.first_attr = first_attr
         self.second_attr = second_attr
-        self.relation = relation
+        self.thir_attr = third_attr
 
     def convert_to_sql(self) -> str:
         return None

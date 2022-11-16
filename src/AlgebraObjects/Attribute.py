@@ -1,4 +1,4 @@
-class Attribute(object):
+class Attribute():
     """
     Représente tous les attributs de toutes les relations. 
     Inutilisable pour les moments -> voir classe(s) enfant(es)
