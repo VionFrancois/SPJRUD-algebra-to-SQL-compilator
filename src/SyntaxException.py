@@ -1,7 +1,7 @@
 import re
 
-CONSTANT = r"Cst\([a-zA-Z0-9\(\),]+\)"
-ATTRIBUTE = r"Att\([a-zA-Z0-9\(\),]+\)"
+CONSTANT = r"Cst\([a-zA-Z0-9]+\)"
+ATTRIBUTE = r"Att\([a-zA-Z0-9]+\)"
 RELATION = r"Re\([a-zA-Z0-9\(\),]+\)"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
@@ -30,30 +30,35 @@ def find_closed_parenthesis(s):
             sub_parenthesis = False
         elif(s[i] == ')'):
             return i
+    return -1
 
 def is_there_enough_parenthesis(s):
     parenthesis = 0
     for i in s:
-        if(i == '(' or i == ')'):
+        if(i == '('):
             parenthesis += 1
-    return parenthesis % 2 == 0
+        elif(i == ')'):
+            parenthesis -= 1
+        
+    return parenthesis == 0
 
 def search_under_request(s):
-    parenthesis = [i for i in s if i == '(' or i == ')']
     count_opened_parenthesis = 0
-    for i in range(0, len(parenthesis)):
-        if(parenthesis[i] == '('):
-            count_opened_parenthesis +=1
-        if(count_opened_parenthesis >= 3):
-            return i
-        elif(parenthesis[i] == ')'):
-            count_opened_parenthesis = 0
+    previous_parenthesis = 0
+    for i in range(0, len(s)):
+        if(count_opened_parenthesis == 2 and s[i] == '('):
+            return previous_parenthesis
+        if(s[i] == '('):
+            count_opened_parenthesis += 1
+            previous_parenthesis = i
+        elif(s[i] == ')'):
+            count_opened_parenthesis -= 1
     return -1
 
     
 def check_syntax(s):
     try:
-
+        assert is_there_enough_parenthesis(s), f"some of your parenthesis are not closed"
         print(s)
         answer = False
         for i in SPJRUD_REGEX:
@@ -63,11 +68,10 @@ def check_syntax(s):
         
         assert answer, f"Syntax error, the part '{s}' is wrong"
         begin_of_the_request = search_under_request(s)
-        print(begin_of_the_request)
         if begin_of_the_request != -1:
             closed_indice = find_closed_parenthesis(s[begin_of_the_request:])
-            assert closed_indice != -1, f"your parenthesis are not well managed"
-            answer = check_syntax(s[i + 1: closed_indice + i])                
+            under_request = s[begin_of_the_request + 1: closed_indice + begin_of_the_request + 1]
+            answer = check_syntax(under_request)                
         return answer
     except AssertionError as e:
         print(e)
@@ -87,14 +91,16 @@ def split(delim1, delim2, forbidden,s):
 
 
 l = "Select(Att(Country),=,Cst(Mali),Re(CC))"
-#print(re.match(SELECT, l))
-#print(check_syntax(remove_space(l))) #vrai
-#l = "Select(Att(country), egual, att(Mali), Re(CC))"
-#print(check_syntax(remove_space(l))) #faux
-l = "Select(Att(country), =, Cst(b), Re(Join(Re(R1), Re(R2))))"
+print(re.match(SELECT, l))
 print(check_syntax(remove_space(l))) #vrai
-l = "Project(Att(1), Re(Union(Re(un), Rel(deux))))"
-#print(check_syntax(remove_space(l))) #vrai
+l = "Select(Att(country), egual, att(Mali), Re(CC))"
+print(check_syntax(remove_space(l))) #faux
+l = "Select(Att(country), =, Cst(b))), Re(Join(Re(R1), Re(R2))))"
+print(check_syntax(remove_space(l))) #faux
+l = "Project(Att(1), Re(Union(Re(un), Re(deux))"
+print(check_syntax(remove_space(l))) #faux
+l = "Project(Att(Project(Att(1),Re(Join(Re(2), Re(3), Re(4))"
+print(check_syntax(remove_space(l)))
 
 
 
