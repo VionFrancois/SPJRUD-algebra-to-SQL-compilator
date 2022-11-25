@@ -26,7 +26,7 @@ class Relation(Entity):
 
     def __str__(self) -> str:
         if(self.attributes != None != self.tuples):
-            return self.printTable()
+            return self.__printTable()
 
     def __printTable(self):
         length = len(f"{self.attributes[0] : <15} |") * len(self.attributes)
@@ -96,8 +96,27 @@ class Expression(Relation):
                 self.relation2 = relation2
         else:
             raise Exception() #TODO doit penser à l'exception
+
         if(isinstance(constant, Constant) or constant == None):
             self.constant = constant
+        else:
+            raise Exception() #TODO doit penser à l'exception
+
+
+class ExpressionWithConstant(Expression):
+
+    def __init__(self, name, attribute, relation, constant):
+        if(isinstance(constant, Constant) and isinstance(attribute, Attribute) and isinstance(relation, Relation)):
+            super.__init__(name, relation, attribute, None, constant)
+        else:
+            raise Exception() #TODO doit penser à l'exception
+
+class ExpressionWithRelations(Expression):
+
+    def __init__(self, name, relation1, relation2):
+
+        if(isinstance(relation1, Relation) and isinstance(relation2, Relation)):
+            super.__init__(name, relation1, None, relation2, None)
         else:
             raise Exception() #TODO doit penser à l'exception
         

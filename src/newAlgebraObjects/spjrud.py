@@ -1,17 +1,16 @@
-from entities import Expression, Relation
+from entities import Expression, ExpressionWithConstant , ExpressionWithRelations
 from enum import Enum
 
-#TODO Dois faire des sous-classes d'Expression pour vérifier les types arg
 class Operation(Enum):
     EQUAL = 0
     DIFFERENT = 1
 
-class Select(Expression):
+class Select(ExpressionWithConstant):
 
     def __init__(self, attribute, operation, constant, relation):
         if(isinstance(operation, Operation)):
             self.operation = operation
-            super().__init__("Select", relation, attribute, constant)
+            super().__init__("Select", attribute, relation, constant)
 
 
 class Project(Expression):
@@ -20,23 +19,22 @@ class Project(Expression):
         super().__init__("Project",  relation, attribute)
 
 
-class Join(Expression):
+class Join(ExpressionWithRelations):
 
     def __init__(self, relation1, relation2):
-        super().__init__("Join", relation1, None, relation2)
+        super().__init__("Join", relation1, relation2)
 
-class Rename(Expression):
+class Rename(ExpressionWithConstant):
 
     def __init__(self, attribute, constant, relation):
-        super().__init__("Rename", relation, attribute, constant)
+        super().__init__("Rename", attribute, relation, constant)
 
-class Union(Expression):
-
-    def __init__(self, relation1, relation2):
-        super().__init__("Union", relation1, None, relation2)
-
-class Difference(Expression):
+class Union(ExpressionWithRelations):
 
     def __init__(self, relation1, relation2):
-        if(isinstance(relation2, Relation)):
-            super().init("Difference", relation1, None, relation2)
+        super().__init__("Union", relation1, relation2)
+
+class Difference(ExpressionWithRelations):
+
+    def __init__(self, relation1, relation2):
+            super().init("Difference", relation1, relation2)
