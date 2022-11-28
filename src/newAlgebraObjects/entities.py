@@ -27,6 +27,8 @@ class Relation(Entity):
     def __str__(self) -> str:
         if(self.attributes != None != self.tuples):
             return self.__printTable()
+        else:
+            return f"Re({self.name})"
 
     def __printTable(self):
         length = len(f"{self.attributes[0] : <15} |") * len(self.attributes)
@@ -60,7 +62,7 @@ class Attribute(Entity):
             raise Exception() #TODO doit penser à l'exception
     
     def __str__(self):
-        return super.__str__()
+        return f"Att({self.name})"
 
 
 class Constant(Entity):
@@ -72,6 +74,9 @@ class Constant(Entity):
             self.CONSTANT = name #_attribut -> protected
         else:
             raise Exception() #TODO doit penser à l'exception
+
+    def __str__(self):
+        return f"Cst({self.name})"
 
 
 class Expression(Relation):
@@ -101,6 +106,9 @@ class Expression(Relation):
             self.constant = constant
         else:
             raise Exception() #TODO doit penser à l'exception
+    #méthode "abstraite"
+    def conver_to_sql(self):
+        pass
 
 
 class ExpressionWithConstant(Expression):
