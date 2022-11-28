@@ -14,12 +14,12 @@ class Relation(Entity):
     def __init__(self, name, attributes = None, tuples = None):
         super().__init__(name)
 
-        if(isinstance(attributes, list[Attribute]) or attributes == None):
+        if((type(attributes) == list and isinstance(attributes[0], Attribute)) or attributes == None):
             self.attributes = attributes
         else:
             raise Exception() #TODO doit penser à l'exception
 
-        if(isinstance(tuples,list[tuple]) or tuples == None):
+        if((type(tuples) == list and type(tuple[0]) == tuple) or tuples == None):
             self.tuples = tuples
         else:
             raise Exception() #TODO doit penser à l'exception
@@ -107,7 +107,7 @@ class Expression(Relation):
         else:
             raise Exception() #TODO doit penser à l'exception
     #méthode "abstraite"
-    def conver_to_sql(self):
+    def convert_to_sql(self):
         pass
 
 
@@ -115,7 +115,7 @@ class ExpressionWithConstant(Expression):
 
     def __init__(self, name, attribute, relation, constant):
         if(isinstance(constant, Constant) and isinstance(attribute, Attribute) and isinstance(relation, Relation)):
-            super.__init__(name, relation, attribute, None, constant)
+            super().__init__(name, relation, attribute, None, constant)
         else:
             raise Exception() #TODO doit penser à l'exception
 
@@ -124,7 +124,7 @@ class ExpressionWithRelations(Expression):
     def __init__(self, name, relation1, relation2):
 
         if(isinstance(relation1, Relation) and isinstance(relation2, Relation)):
-            super.__init__(name, relation1, None, relation2, None)
+            super().__init__(name, relation1, None, relation2, None)
         else:
             raise Exception() #TODO doit penser à l'exception
         
