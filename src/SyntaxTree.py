@@ -13,6 +13,55 @@ class SyntaxTree():
         return self.root
 
 
+    def makeTree(self, requete : str):
+        # Récupération de l'opérateur
+        i = 0
+        opStr = ""
+        while requete[i] != "(":
+            opStr = opStr + requete[i]
+        
+        param = 2
+        match opStr:
+            case "Select":
+                param = 4
+            case "Rename":
+                param = 3
+        
+        # Récupération des opérandes
+        paramLst = []
+        paramStr = ""
+        par = 0
+        while param != 0:
+            if requete[i] == "(":
+                par += 1
+            if requete[i] == ")" and par > 0:
+                par -= 1
+            if (requete[i] == "," or requete[i] == ")") and par == 0:
+                paramLst.append(paramStr)
+                param -= 1
+            else:
+                paramStr += param[i]
+            
+            i += 1
+        i += 1
+        
+        # Crée le sous arbre de l'expression avec ses paramètres
+        match opStr:
+            case "Select":
+                
+            case "Project":
+
+            case "Join":
+
+            case "Rename":
+
+            case "Union":
+
+            case "Difference":
+
+
+
+
 
 class Node():
 

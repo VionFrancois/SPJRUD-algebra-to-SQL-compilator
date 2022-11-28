@@ -6,7 +6,7 @@ class Expression(): #TODO doit encore implementer le fait d'extends d'attribut
     Représente tous les expressions de SPJRUD.
     Inutilisable pour les moments -> voir classe(s) enfant(es)
     """
-    def __init__(self, first_attr : Attribute, second_attr : Attribute, third_attr : Attribute):
+    def __init__(self, first_attr, second_attr, third_attr):
         # Vérifie que les paramètres donnés sont soit un Attribute ou une Expression
         firstBol = isinstance(first_attr, Attribute) or isinstance(first_attr, Expression)
         secondBol = isinstance(second_attr, Attribute) or isinstance(second_attr, Expression)
