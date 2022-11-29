@@ -5,6 +5,7 @@ class Request(object):
 
     def __init__(self, Request_type):
         self.type = None
+        self.sql = None
         TYPES = ["select","project","join","rename","union","difference"]
         for i in TYPES:
             if(Request_type == i):
@@ -29,4 +30,5 @@ class Request(object):
         else:
             obj = Difference(Relation(relation1), Relation(relation2))
 
-        return obj.convert_to_sql()
+        self.sql = obj.convert_to_sql()
+        return self.sql

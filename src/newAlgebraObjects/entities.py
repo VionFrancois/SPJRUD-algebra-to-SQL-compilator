@@ -19,7 +19,7 @@ class Relation(Entity):
         else:
             raise Exception() #TODO doit penser à l'exception
 
-        if((type(tuples) == list and type(tuple[0]) == tuple) or tuples == None):
+        if((type(tuples) == list and (len(tuples) == 0 or type(tuples[0]) == tuple)) or tuples == None):
             self.tuples = tuples
         else:
             raise Exception() #TODO doit penser à l'exception
@@ -31,20 +31,22 @@ class Relation(Entity):
             return f"Re({self.name})"
 
     def __printTable(self):
-        length = len(f"{self.attributes[0] : <15} |") * len(self.attributes)
+        length = len(f"{self.attributes[0].name : <25} |") * len(self.attributes)
 
         s = "|"
         
         for i in range(0, len(self.attributes)):
-            s += f"{self.attributes[i].upper() : <15} |"
+            s += f"{self.attributes[i].name.upper() : <25} |"
         
         s += "\n" + "-" * (length + 1) + "\n"
 
-        for i in range(0, len(self.tuples)):
-            s += "|"
-            for j in range(0, len(self.tuples[i])):
-                s += f"{self.tuples[i][j] : <15} |"
-            s += "\n"
+        if(len(self.tuples) != 0):
+            print("je passe")
+            for i in range(0, len(self.tuples)):
+                s += "|"
+                for j in range(0, len(self.tuples[i])):
+                    s += f"{self.tuples[i][j] : <25} |"
+                s += "\n"
         
         s = "-" * (length + 1) + "\n" + s + "-" * (length + 1 )+ "\n"
         return s
