@@ -1,13 +1,13 @@
 from SyntaxTree import *
-from AlgebraObjects.Attribute import *
-from AlgebraObjects.SPRJUD import *
+from newAlgebraObjects.entities import *
+from newAlgebraObjects.spjrud import *
 
 arbre = SyntaxTree()
-attr1 = Attribute("a")
-attr2 = Attribute("Select")
-attr4 = Attribute("b")
-attr5 = Attribute("c")
-attr6 = Expression(attr4, attr2, Attribute("d"))
+attr1 = Entity("a")
+attr2 = Entity("Select")
+attr4 = Entity("b")
+attr5 = Entity("c")
+attr6 = Expression(attr4, attr2, Entity("d"))
 attr3 = Expression(attr4, attr2, attr6)
 expr = Expression(attr1,attr2,attr3)
 

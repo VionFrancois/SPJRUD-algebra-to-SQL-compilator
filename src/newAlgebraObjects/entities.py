@@ -86,6 +86,8 @@ class Expression(Relation):
     def __init__(self, name, relation1, attribute = None, relation2 = None, constant = None):
         super().__init__(name)
 
+        # Vérification du type des paramètres et attitrage
+         
         if(isinstance(attribute, Attribute)):
             self.attribute = attribute
         else:

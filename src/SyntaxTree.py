@@ -1,19 +1,13 @@
-from AlgebraObjects.Attribute import Attribute
-from AlgebraObjects.SPRJUD import Expression
+from newAlgebraObjects.entities import *
+from newAlgebraObjects.spjrud import *
 
 class SyntaxTree():
 
     def __init__(self) -> None:
         self.root = None
 
-    def setRoot(self, attribute):
-        self.root = attribute
 
-    def getRoot(self):
-        return self.root
-
-
-    def makeTree(self, requete : str):
+    def makeExpr(self, requete : str):
         # Récupération de l'opérateur
         i = 0
         opStr = ""
@@ -43,21 +37,39 @@ class SyntaxTree():
                 paramStr += param[i]
             
             i += 1
+            paramLst.append(paramStr)
+            paramStr = ""
         i += 1
-        
-        # Crée le sous arbre de l'expression avec ses paramètres
+
+
+        # Crée l'expression avec ses paramètres
         match opStr:
             case "Select":
-                
+                expr = Select(param[0], param[1], param[2], param[3])
             case "Project":
-
+                attr = Attribute(param[0])
+                rel = Relation(param[1])
+                expr = Project(attr, rel)
             case "Join":
-
+                expr = Join(param[0], param[1])
             case "Rename":
-
+                expr = Rename(param[0], param[1], param[2])
             case "Union":
-
+                expr = Union(param[0], param[1])
             case "Difference":
+                expr = Difference(param[0], param[1])
+
+
+
+        # Cas de base : Feuilles avec une relation qui est une table, pas une expression
+
+
+
+        # Cas de réccurence : Expression composée d'une relation qui est une expression
+        
+
+        
+                        
 
 
 
@@ -65,33 +77,20 @@ class SyntaxTree():
 
 class Node():
 
-    def __init__(self, attribute, left : Attribute = None, right : Attribute = None) -> None:
-        if attribute is not None:
-            if isinstance(attribute, Expression):
-                expression = attribute
+    def __init__(self, entity, left : Entity = None, right : Entity = None) -> None:
+        if entity is not None:
+            if isinstance(entity, Expression):
+                expression = entity
                 self.left = Node(expression.first_attr)
-                self.attribute = expression.second_attr
+                self.entity = expression.second_attr
                 self.right = Node(expression.thir_attr)
             else:
-                if isinstance(attribute, Attribute):   
-                    self.attribute = attribute
+                if isinstance(entity, Entity):   
+                    self.entity = entity
                     self.left = Node(left)
                     self.right = Node(right)
         else:
-            self.attribute = None
-
-    # TODO : Est ce utile en Python ?
-    def setLeft(self, attribute):
-        self.left = attribute
-
-    def setRight(self, attribute):
-        self.right = attribute
-
-    def getLeft(self):
-        return self.left
-
-    def getRight(self):
-        return self.right
+            self.entity = None
 
 
     # https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
@@ -104,8 +103,8 @@ class Node():
     def _display_aux(self):
         """Returns list of strings, width, height, and horizontal coordinate of the root."""
         # No child.
-        if self.right.attribute is None and self.left.attribute is None:
-            line = '%s' % self.attribute.name
+        if self.right.entity is None and self.left.entity is None:
+            line = '%s' % self.entity.name
             width = len(line)
             height = 1
             middle = width // 2
@@ -114,7 +113,7 @@ class Node():
         # Only left child.
         if self.right is None:
             lines, n, p, x = self.left._display_aux()
-            s = '%s' % self.attribute.name
+            s = '%s' % self.entity.name
             u = len(s)
             first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
             second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
@@ -124,7 +123,7 @@ class Node():
         # Only right child.
         if self.left is None:
             lines, n, p, x = self.right._display_aux()
-            s = '%s' % self.attribute.name
+            s = '%s' % self.entity.name
             u = len(s)
             first_line = s + x * '_' + (n - x) * ' '
             second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
@@ -134,7 +133,7 @@ class Node():
         # Two children.
         left, n, p, x = self.left._display_aux()
         right, m, q, y = self.right._display_aux()
-        s = '%s' % self.attribute.name
+        s = '%s' % self.entity.name
         u = len(s)
         first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
         second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
