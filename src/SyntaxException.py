@@ -1,8 +1,8 @@
 import re
 
-CONSTANT = r"Cst\([a-zA-Z0-9]+\)"
-ATTRIBUTE = r"Att\([a-zA-Z0-9]+\)"
-RELATION = r"Re\([a-zA-Z0-9\(\),]+\)"
+CONSTANT = r"[a-zA-Z0-9]+"
+ATTRIBUTE = CONSTANT
+RELATION = r"[a-zA-Z0-9\(\),]+"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
 PROJECT = r"Project\("+ ATTRIBUTE +r"," + RELATION + r"\)"
@@ -32,22 +32,26 @@ def find_closed_parenthesis(s):
             return i
 
 def is_there_enough_parenthesis(s):
-    parenthesis = 0
-    last_opened_parenthesis = 0
+    stack = []
     for i in range(0,len(s)):
         if(s[i] == '('):
-            parenthesis += 1
-            last_opened_parenthesis = i
+            stack.append(('(', i))
         elif(s[i] == ')'):
-            parenthesis -= 1
+            if(stack != []):
+                stack.pop()
+            else:
+                return (-1, -1)
+    
+    if(stack == []):
+        return (0,0)
         
-    return (parenthesis, last_opened_parenthesis)
+    return (len(stack) , stack[-1][1])
 
 def search_under_request(s):
     count_opened_parenthesis = 0
     previous_parenthesis = 0
     for i in range(0, len(s)):
-        if(count_opened_parenthesis == 2 and s[i] == '('):
+        if(count_opened_parenthesis == 1 and s[i] == '('):
             return previous_parenthesis
         if(s[i] == '('):
             count_opened_parenthesis += 1
@@ -63,7 +67,7 @@ def check_syntax(s):
         if(is_closed < 0):
             raise Exception(f"there is too many parenthesis")
         elif(is_closed > 0):
-            raise Exception(f"the parenthesis at index {last_opened} is not closed")
+            raise Exception(f"the parenthesis at index {last_opened} is not closed:\n{s}\n" + " "*(last_opened) + "^")
         answer = False
         for i in SPJRUD_REGEX:
             if(re.match(i, s) != None):
@@ -71,7 +75,7 @@ def check_syntax(s):
                 break
 
         if(not answer):
-            raise Exception(f"Syntax error, the part '{s} is wrong'")
+            raise Exception(f"Syntax error, the part '{s}' is wrong")
 
         begin_of_the_request = search_under_request(s)
         if begin_of_the_request != -1:
@@ -96,18 +100,17 @@ def split(delim1, delim2, forbidden,s):
     return res
 
 
-l = "Select(Att(Country),=,Cst(Mali),Re(CC))"
-print(re.match(SELECT, l))
+l = "Select(Country,=,Mali,CC)"
 print(check_syntax(remove_space(l))) #vrai
-l = "Select(Att(country), egual, att(Mali), Re(CC))"
+l = "Select(country, egual, Mali, CC)"
 print(check_syntax(remove_space(l))) #faux
-l = "Select(Att(country), =, Cst(b))), Re(Join(Re(R1), Re(R2))))"
+l = "Select(country, =, b, Join(R1, R2)"
 print(check_syntax(remove_space(l))) #faux
-l = "Project(Att(1), Re(Union(Re(un), Re(deux))"
+l = "Project(1, Union(un, deux)"
 print(check_syntax(remove_space(l))) #faux
-l = "Project(Att(Project(Att(1),Re(Join(Re(2), Re(3), Re(4))"
+l = "Project(Project(1,Join(2, 3, 4)"
 print(check_syntax(remove_space(l)))
-l = "Select(Att(id), =, Cst(b), Re(Join(Re(b), Re(c))))"
+l = "Select(id, =, b, Join(b, c))"
 print(check_syntax(remove_space(l)))
 
 
