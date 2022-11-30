@@ -30,17 +30,18 @@ def find_closed_parenthesis(s):
             sub_parenthesis = False
         elif(s[i] == ')'):
             return i
-    return -1
 
 def is_there_enough_parenthesis(s):
     parenthesis = 0
-    for i in s:
-        if(i == '('):
+    last_opened_parenthesis = 0
+    for i in range(0,len(s)):
+        if(s[i] == '('):
             parenthesis += 1
-        elif(i == ')'):
+            last_opened_parenthesis = i
+        elif(s[i] == ')'):
             parenthesis -= 1
         
-    return parenthesis == 0
+    return (parenthesis, last_opened_parenthesis)
 
 def search_under_request(s):
     count_opened_parenthesis = 0
@@ -58,22 +59,27 @@ def search_under_request(s):
     
 def check_syntax(s):
     try:
-        assert is_there_enough_parenthesis(s), f"some of your parenthesis are not closed"
-        print(s)
+        is_closed, last_opened = is_there_enough_parenthesis(s)
+        if(is_closed < 0):
+            raise Exception(f"there is too many parenthesis")
+        elif(is_closed > 0):
+            raise Exception(f"the parenthesis at index {last_opened} is not closed")
         answer = False
         for i in SPJRUD_REGEX:
             if(re.match(i, s) != None):
                 answer = True
                 break
-        
-        assert answer, f"Syntax error, the part '{s}' is wrong"
+
+        if(not answer):
+            raise Exception(f"Syntax error, the part '{s} is wrong'")
+
         begin_of_the_request = search_under_request(s)
         if begin_of_the_request != -1:
             closed_indice = find_closed_parenthesis(s[begin_of_the_request:])
             under_request = s[begin_of_the_request + 1: closed_indice + begin_of_the_request + 1]
             answer = check_syntax(under_request)                
         return answer
-    except AssertionError as e:
+    except Exception as e:
         print(e)
         return False
 
@@ -101,6 +107,9 @@ l = "Project(Att(1), Re(Union(Re(un), Re(deux))"
 print(check_syntax(remove_space(l))) #faux
 l = "Project(Att(Project(Att(1),Re(Join(Re(2), Re(3), Re(4))"
 print(check_syntax(remove_space(l)))
+l = "Select(Att(id), =, Cst(b), Re(Join(Re(b), Re(c))))"
+print(check_syntax(remove_space(l)))
+
 
 
 
