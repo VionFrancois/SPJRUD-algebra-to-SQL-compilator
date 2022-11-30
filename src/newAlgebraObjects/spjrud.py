@@ -36,7 +36,7 @@ class Project(Expression):
         return f"Project({self.attribute.__str__()},{self.relation.__str__()})"
 
     def convert_to_sql(self):
-        return f"SELECT ({self.attribute.name}) FROM ({self.relation.name})"
+        return f"SELECT {self.attribute.name} FROM ({self.relation.name})"
 
 class Join(ExpressionWithRelations):
 
@@ -58,7 +58,7 @@ class Rename(ExpressionWithConstant):
         return f"Rename({self.attribute.__str__()},{self.constant.__str__()},{self.relation.__str__()}"
 
     def convert_to_sql(self):
-        return f"SELECT ({self.attribute.name}) AS '{self.constant.name}' FROM ({self.relation.name})"
+        return f"SELECT {self.attribute.name} AS '{self.constant.name}' FROM ({self.relation.name})"
 
 class Union(ExpressionWithRelations):
 
@@ -74,7 +74,7 @@ class Union(ExpressionWithRelations):
 class Difference(ExpressionWithRelations):
 
     def __init__(self, relation1, relation2):
-            super().init("Difference", relation1, relation2)
+            super().__init__("Difference", relation1, relation2)
 
     def __str__(self):
         return f"Difference({self.relation1.__str__()},{self.relation2.__str__()})"

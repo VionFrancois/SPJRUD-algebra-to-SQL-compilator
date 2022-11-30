@@ -1,7 +1,12 @@
 from request import Request
 from database import DataBase
-import sqlite3
 
 dt = DataBase("test.db")
-dt.execute(Request("project").make_request("*", "contacts"),"contacts")
+requete = Request("Rename").make_request("contacts", "contact_id", "id")
+print(requete)
+requet2 = Request("Project").make_request("contacts", "id")
+print(requet2)
+print(Request("Union").make_request(requet2, None, None, requete))
+dt.execute(Request("Difference").make_request(requete, None, None, requet2),"contacts")
+
 print(dt.display())
