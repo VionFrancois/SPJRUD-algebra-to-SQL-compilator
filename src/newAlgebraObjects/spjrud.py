@@ -1,6 +1,6 @@
-from newAlgebraObjects.entities import Expression
-from newAlgebraObjects.entities import ExpressionWithConstant
-from newAlgebraObjects.entities import ExpressionWithRelations
+from entities import Expression
+from entities import ExpressionWithConstant
+from entities import ExpressionWithRelations
 from enum import Enum
 
 class Operation(Enum):
@@ -22,9 +22,9 @@ class Select(ExpressionWithConstant):
     
     def convert_to_sql(self):
         if(self.operation == Operation.EQUAL):
-            return f"SELECT * FROM {self.relation.name} WHERE {self.attribute.name} = '{self.constant.name}'"
+            return f"SELECT * FROM ({self.relation.name}) WHERE ({self.attribute.name}) = '{self.constant.name}'"
         else:
-            return f"SELECT * FROM {self.relation.name} WHERE {self.attribute.name} <> '{self.constant.name}'"
+            return f"SELECT * FROM ({self.relation.name}) WHERE ({self.attribute.name}) <> '{self.constant.name}'"
 
 
 class Project(Expression):
@@ -36,7 +36,7 @@ class Project(Expression):
         return f"Project({self.attribute.__str__()},{self.relation.__str__()})"
 
     def convert_to_sql(self):
-        return f"SELECT {self.attribute.name} FROM {self.relation.name}"
+        return f"SELECT ({self.attribute.name}) FROM ({self.relation.name})"
 
 class Join(ExpressionWithRelations):
 
@@ -47,7 +47,7 @@ class Join(ExpressionWithRelations):
         return f"Join({self.relation1.__str__()},{self.relation2.__str__()})"
     
     def convert_to_sql(self):
-        return f"SELECT * FROM {self.relation1.name} NATURAL JOIN {self.relation2.name}"
+        return f"SELECT * FROM ({self.relation1.name}) NATURAL JOIN ({self.relation2.name})"
 
 class Rename(ExpressionWithConstant):
 
@@ -58,7 +58,7 @@ class Rename(ExpressionWithConstant):
         return f"Rename({self.attribute.__str__()},{self.constant.__str__()},{self.relation.__str__()}"
 
     def convert_to_sql(self):
-        return f"SELECT {self.attribute.name} AS '{self.constant.name}' FROM {self.relation.name}"
+        return f"SELECT ({self.attribute.name}) AS '{self.constant.name}' FROM ({self.relation.name})"
 
 class Union(ExpressionWithRelations):
 
@@ -69,7 +69,7 @@ class Union(ExpressionWithRelations):
         return f"Union({self.relation1.__str__()},{self.relation2.__str__()}"
 
     def convert_to_sql(self):
-        return f"SELECT * FROM {self.relation1.name} UNION SELECT * FROM {self.relation2.name}"
+        return f"SELECT * FROM ({self.relation1.name}) UNION SELECT * FROM ({self.relation2.name})"
 
 class Difference(ExpressionWithRelations):
 
@@ -80,4 +80,4 @@ class Difference(ExpressionWithRelations):
         return f"Difference({self.relation1.__str__()},{self.relation2.__str__()})"
 
     def convert_to_sql(self):
-        return f"SELECT * FROM {self.relation1.name} EXCEPT SELECT * FROM {self.relation2.name}"
+        return f"SELECT * FROM ({self.relation1.name}) EXCEPT SELECT * FROM ({self.relation2.name})"
