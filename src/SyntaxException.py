@@ -22,14 +22,14 @@ def remove_space(s):
     return res
 
 def find_closed_parenthesis(s):     
-    sub_parenthesis = False
+    stack = []
     for i in range(0, len(s)):
         if(s[i] == '('):
-            sub_parenthesis = True
-        elif(s[i] == ')' and sub_parenthesis):
-            sub_parenthesis = False
-        elif(s[i] == ')'):
+            stack.append(('(', i))
+        elif(s[i] == ')' and stack[-1][0] == 0):
             return i
+        elif(s[i] == ')'):
+            stack.pop()
 
 def is_there_enough_parenthesis(s):
     stack = []
@@ -40,7 +40,7 @@ def is_there_enough_parenthesis(s):
             if(stack != []):
                 stack.pop()
             else:
-                return (-1, -1)
+                return (-1, i)
     
     if(stack == []):
         return (0,0)
@@ -51,7 +51,7 @@ def search_under_request(s):
     count_opened_parenthesis = 0
     previous_parenthesis = 0
     for i in range(0, len(s)):
-        if(count_opened_parenthesis == 1 and s[i] == '('):
+        if(count_opened_parenthesis == 2 and s[i] == '('):
             return previous_parenthesis
         if(s[i] == '('):
             count_opened_parenthesis += 1
@@ -63,11 +63,11 @@ def search_under_request(s):
     
 def check_syntax(s):
     try:
-        is_closed, last_opened = is_there_enough_parenthesis(s)
+        is_closed, last_parenthesis = is_there_enough_parenthesis(s)
         if(is_closed < 0):
-            raise Exception(f"there is too many parenthesis")
+            raise Exception(f"there is too many parenthesis:\n{s}\n"+ " "*(last_parenthesis) +"^")
         elif(is_closed > 0):
-            raise Exception(f"the parenthesis at index {last_opened} is not closed:\n{s}\n" + " "*(last_opened) + "^")
+            raise Exception(f"the parenthesis at index {last_parenthesis} is not closed:\n{s}\n" + " "*(last_parenthesis) + "^")
         answer = False
         for i in SPJRUD_REGEX:
             if(re.match(i, s) != None):
@@ -106,9 +106,9 @@ l = "Select(country, egual, Mali, CC)"
 print(check_syntax(remove_space(l))) #faux
 l = "Select(country, =, b, Join(R1, R2)"
 print(check_syntax(remove_space(l))) #faux
-l = "Project(1, Union(un, deux)"
+l = "Project(1, Union(un, deux))"
 print(check_syntax(remove_space(l))) #faux
-l = "Project(Project(1,Join(2, 3, 4)"
+l = "Project(Project(1,Join(2, 3, 4)))" #faux
 print(check_syntax(remove_space(l)))
 l = "Select(id, =, b, Join(b, c))"
 print(check_syntax(remove_space(l)))
