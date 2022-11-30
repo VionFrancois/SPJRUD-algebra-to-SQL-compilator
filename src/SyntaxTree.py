@@ -6,13 +6,21 @@ class SyntaxTree():
     def __init__(self) -> None:
         self.root = None
 
+    def isSubRequest(request):
+        keywords = ["Select(","Project(","Join(","Rename(","Union(","Difference("]
+        rep = False
+        for i in range(len(keywords)):
+            if keywords[i] in request:
+                rep = True
+        return rep
 
-    def makeExpr(self, requete : str):
+    def makeTree(requete : str):
         # Récupération de l'opérateur
         i = 0
         opStr = ""
         while requete[i] != "(":
             opStr = opStr + requete[i]
+            i += 1
         
         param = 2
         match opStr:
@@ -25,47 +33,108 @@ class SyntaxTree():
         paramLst = []
         paramStr = ""
         par = 0
+        i += 1
         while param != 0:
             if requete[i] == "(":
                 par += 1
             if requete[i] == ")" and par > 0:
                 par -= 1
-            if (requete[i] == "," or requete[i] == ")") and par == 0:
+            if (requete[i] == ",") and par == 0:
                 paramLst.append(paramStr)
+                paramStr = ""
                 param -= 1
             else:
-                paramStr += param[i]
-            
+                paramStr += requete[i]
+
+            if(i == len(requete) -1):
+                paramLst.append((paramStr[:-1]))
+                param -= 1
             i += 1
-            paramLst.append(paramStr)
-            paramStr = ""
-        i += 1
 
 
-        # Crée l'expression avec ses paramètres
+        # Crée le sous arbre avec les paramètres
+        # Pour chaque cas, on a :
+        # Cas de base : Feuilles avec une relation qui est une table, pas une expression
+        # Cas de réccurence : Expression composée d'une relation qui est une expression
+
         match opStr:
             case "Select":
-                expr = Select(param[0], param[1], param[2], param[3])
+
+                subTree = Node(Entity("Select"))
+                subTree.left = Node(Entity(paramLst[1])) # Opérateur
+                subTree.left.left = Node(Entity(paramLst[0])) # Attribut
+                subTree.left.right = Node((Entity(paramLst[2]))) # Constante
+
+                if SyntaxTree.isSubRequest(paramLst[3]):
+                    subTree.right = SyntaxTree.makeTree(paramLst[3]) # Crée le sous arbre de la requête
+                else:
+                    subTree.right = Node(Entity(paramLst[3])) # Relation (table)
+                  
             case "Project":
-                attr = Attribute(param[0])
-                rel = Relation(param[1])
-                expr = Project(attr, rel)
+
+                subTree = Node(Entity("Project"))
+                subTree.left = Node(Entity(paramLst[0])) # Attribut
+
+                if SyntaxTree.isSubRequest(paramLst[1]):
+                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                else:
+                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
+                
             case "Join":
-                expr = Join(param[0], param[1])
+
+                subTree = Node(Entity("Join"))
+
+                if SyntaxTree.isSubRequest(paramLst[0]):
+                    subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
+                else:
+                    subTree.left = Node(Entity(paramLst[1])) # Relation (table)
+
+                if SyntaxTree.isSubRequest(paramLst[1]):
+                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                else:
+                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
+
             case "Rename":
-                expr = Rename(param[0], param[1], param[2])
+
+                subTree = Node(Entity("Rename"))
+                subTree.left = Node(Entity(paramLst[0]+":"+paramLst[1])) # ancienNom:nouveauNom
+
+                if SyntaxTree.isSubRequest(paramLst[2]):
+                    subTree.right = SyntaxTree.makeTree(paramLst[2]) # Crée le sous arbre de la requête
+                else:
+                    subTree.right = Node(Entity(paramLst[2])) # Relation (table)
+
             case "Union":
-                expr = Union(param[0], param[1])
+
+                subTree = Node(Entity("Union"))
+
+                if SyntaxTree.isSubRequest(paramLst[0]):
+                    subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
+                else:
+                    subTree.left = Node(Entity(paramLst[1])) # Relation (table)
+
+                if SyntaxTree.isSubRequest(paramLst[1]):
+                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                else:
+                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
+
             case "Difference":
-                expr = Difference(param[0], param[1])
+
+                subTree = Node(Entity("Difference"))
+
+                if SyntaxTree.isSubRequest(paramLst[0]):
+                    subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
+                else:
+                    subTree.left = Node(Entity(paramLst[1])) # Relation (table)
+
+                if SyntaxTree.isSubRequest(paramLst[1]):
+                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                else:
+                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
+
+        return subTree
 
 
-
-        # Cas de base : Feuilles avec une relation qui est une table, pas une expression
-
-
-
-        # Cas de réccurence : Expression composée d'une relation qui est une expression
         
 
         
@@ -77,18 +146,18 @@ class SyntaxTree():
 
 class Node():
 
-    def __init__(self, entity, left : Entity = None, right : Entity = None) -> None:
+    def __init__(self, entity) -> None:
         if entity is not None:
-            if isinstance(entity, Expression):
-                expression = entity
-                self.left = Node(expression.first_attr)
-                self.entity = expression.second_attr
-                self.right = Node(expression.thir_attr)
-            else:
+            # if isinstance(entity, Expression):
+            #     expression = entity
+            #     self.left = Node(expression.first_attr)
+            #     self.entity = expression.second_attr
+            #     self.right = Node(expression.thir_attr)
+            # else:
                 if isinstance(entity, Entity):   
                     self.entity = entity
-                    self.left = Node(left)
-                    self.right = Node(right)
+                    self.left = Node(None)
+                    self.right = Node(None)
         else:
             self.entity = None
 
