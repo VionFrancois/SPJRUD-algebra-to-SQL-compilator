@@ -41,7 +41,6 @@ class Relation(Entity):
         s += "\n" + "-" * (length + 1) + "\n"
 
         if(len(self.tuples) != 0):
-            print("je passe")
             for i in range(0, len(self.tuples)):
                 s += "|"
                 for j in range(0, len(self.tuples[i])):
@@ -88,7 +87,7 @@ class Expression(Relation):
 
         # Vérification du type des paramètres et attitrage
          
-        if(isinstance(attribute, Attribute)):
+        if(isinstance(attribute, Attribute) or attribute == None):
             self.attribute = attribute
         else:
             raise Exception() #TODO doit penser à l'exception
