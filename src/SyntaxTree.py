@@ -1,5 +1,5 @@
-from newAlgebraObjects.entities import *
-from newAlgebraObjects.spjrud import *
+from entities import *
+from spjrud import *
 
 class SyntaxTree():
 

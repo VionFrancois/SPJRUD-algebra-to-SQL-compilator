@@ -2,26 +2,35 @@
 fichier à éxécuter
 """
 from sys import argv
-from file import check_file
-import sqlite3
+from database import DataBase
+from request import Request
+import syntax
+
+
 
 if __name__ == "__main__":
+    LOG = "request.log"
+    previous_request = []
+
+
     if len(argv) < 2:
         print("please put database as second argument")
         exit()
         
-    database = argv[1]
-    check_file(database)
-    conn = sqlite3.connect(database)
-    c = conn.cursor()
-   # c.execute("CREATE TABLE contacts (contact_id INTEGER PRIMARY KEY,first_name TEXT NOT NULL,last_name TEXT NOT NULL,email TEXT NOT NULL UNIQUE,phone TEXT NOT NULL UNIQUE);")
-    stmt = "insert into contacts (contact_id, first_name, last_name, email, phone) values (?, ?, ?, ?, ?)"
-    vals = [(1, 'julien', 'ladeuze', 'julienladeuze@outlook.fr', "0474117240")]
-    c.executemany(stmt, vals)
-    c.execute("SELECT * FROM contacts")
-    print(c.fetchone())
+    database = DataBase(argv[1])
     inp = None
     print("please enter a statement.")
-    while not(inp == "exit"):
-        print("-> ", end = "")
-        inp = input()
+    with open(LOG, "a") as opened_file:
+        while True:
+            print("-> ", end = "")
+            inp = input()
+
+            if inp == "exit":
+                break
+
+            if not syntax.syntax_is_correct(syntax.remove_space(inp)):
+                opened_file.write(inp+ "\n")
+                continue
+            #TODO manque plus que l'execution de la requete apres la décomposition
+
+            
