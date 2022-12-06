@@ -8,4 +8,4 @@ secondReq = "Select(id,=,b,Join(b,c))"
 arbre = SyntaxTree(firstReq)
 print(SyntaxTree.convertToSQL(arbre.root))
 
-# arbre.display()
+arbre.display()
