@@ -9,3 +9,4 @@ src/__pycache__/file.cpython-311.pyc
 src/__pycache__/request.cpython-311.pyc
 src/__pycache__/FileException.cpython-311.pyc
 src/__pycache__/syntax.cpython-311.pyc
+src/__pycache__/SyntaxTree.cpython-311.pyc

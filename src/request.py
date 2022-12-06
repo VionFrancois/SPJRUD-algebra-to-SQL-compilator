@@ -16,8 +16,8 @@ class Request(object):
     def make_request(self, param, relation):
         # param = (attribut, constante, relation2, operation)
         if self.type == "Select":
-            if(param[3] == "="):
-                obj = Select(Attribute(param[0], Relation(relation)), Operation.EQUAL, Constant(param[1]), Relation(relation))
+            if(param[1] == "="):
+                obj = Select(Attribute(param[0], Relation(relation)), Operation.EQUAL, Constant(param[2]), Relation(relation))
             else:
                 obj = Select(Attribute(param[0], Relation(relation)), Operation.DIFFERENT, Constant(param[1]), Relation(relation))
         elif self.type == "Project":

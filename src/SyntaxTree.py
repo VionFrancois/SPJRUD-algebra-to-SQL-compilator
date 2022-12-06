@@ -160,8 +160,8 @@ class SyntaxTree():
         # Cas de récurrence : L'arbre n'est pas une feuille et est donc une expression ou un opérateur
 
         # Si c'est une feuille
-        if arbre.left is None and arbre.right is None:
-            return arbre.entity
+        if arbre.left.entity is None and arbre.right.entity is None:
+            return arbre.entity.name
         else:
             left = SyntaxTree.convertToSQL(arbre.left)
             right = SyntaxTree.convertToSQL(arbre.right)
@@ -171,8 +171,8 @@ class SyntaxTree():
             if racine.name == "=" or racine.name == "!=":
                 return (left, racine.name, right)
             else:
-                request = Request(arbre)
-                request.make_request(left,right)
+                request = Request(arbre.entity.name)
+                return request.make_request(left,right)
 
 
 
