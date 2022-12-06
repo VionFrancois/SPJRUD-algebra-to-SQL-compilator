@@ -13,22 +13,23 @@ class Request(object):
         if(self.type == None):
             raise Exception() #TODO faire le type de l'exception
 
-    def make_request(self, relation1, attribute = None, constant = None, relation2 = None, operation = None):
+    def make_request(self, param, relation):
+        # param = (attribut, constante, relation2, operation)
         if self.type == "Select":
-            if(operation == "="):
-                obj = Select(Attribute(attribute, Relation(relation1)), Operation.EQUAL, Constant(constant), Relation(relation1))
+            if(param[3] == "="):
+                obj = Select(Attribute(param[0], Relation(relation)), Operation.EQUAL, Constant(param[1]), Relation(relation))
             else:
-                obj = Select(Attribute(attribute, Relation(relation1)), Operation.DIFFERENT, Constant(constant), Relation(relation1))
+                obj = Select(Attribute(param[0], Relation(relation)), Operation.DIFFERENT, Constant(param[1]), Relation(relation))
         elif self.type == "Project":
-            obj = Project(Attribute(attribute, Relation(relation1)), Relation(relation1))
+            obj = Project(Attribute(param[0], Relation(relation)), Relation(relation))
         elif self.type == "Join":
-            obj = Join(Relation(relation1), Relation(relation2))
+            obj = Join(Relation(relation), Relation(param[0]))
         elif self.type == "Rename":
-            obj = Rename(Attribute(attribute, Relation(relation1)), Constant(constant), Relation(relation1))
+            obj = Rename(Attribute(param[0], Relation(relation)), Constant(param[1]), Relation(relation))
         elif self.type == "Union":
-            obj = Union(Relation(relation1), Relation(relation2))
+            obj = Union(Relation(relation), Relation(param[0]))
         else:
-            obj = Difference(Relation(relation1), Relation(relation2))
+            obj = Difference(Relation(relation), Relation(param[0]))
 
         self.sql = obj.convert_to_sql()
         return self.sql

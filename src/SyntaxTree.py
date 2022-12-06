@@ -1,11 +1,31 @@
 from entities import *
 from spjrud import *
+from request import *
+
+class Node():
+
+    def __init__(self, entity) -> None:
+        if entity is not None:
+            # if isinstance(entity, Expression):
+            #     expression = entity
+            #     self.left = Node(expression.first_attr)
+            #     self.entity = expression.second_attr
+            #     self.right = Node(expression.thir_attr)
+            # else:
+                if isinstance(entity, Entity):   
+                    self.entity = entity
+                    self.left = Node(None)
+                    self.right = Node(None)
+        else:
+            self.entity = None
+
 
 class SyntaxTree():
 
-    def __init__(self) -> None:
-        self.root = None
+    def __init__(self, request : str) -> None:
+        self.root = SyntaxTree.makeTree(request)
 
+    
     def isSubRequest(request):
         keywords = ["Select(","Project(","Join(","Rename(","Union(","Difference("]
         rep = False
@@ -54,8 +74,8 @@ class SyntaxTree():
 
         # Crée le sous arbre avec les paramètres
         # Pour chaque cas, on a :
-        # Cas de base : Feuilles avec une relation qui est une table, pas une expression
-        # Cas de réccurence : Expression composée d'une relation qui est une expression
+        # Cas de base : Feuilles avec une relation qui est une table ou un attribut, pas une expression
+        # Cas de récurrence : Expression composée d'une relation qui est une expression
 
         match opStr:
             case "Select":
@@ -135,26 +155,31 @@ class SyntaxTree():
         return subTree
 
 
-        
+    def convertToSQL(arbre : Node):
+        # Cas de base : L'arbre est une feuille et retourne son élément
+        # Cas de récurrence : L'arbre n'est pas une feuille et est donc une expression ou un opérateur
 
-
-
-class Node():
-
-    def __init__(self, entity) -> None:
-        if entity is not None:
-            # if isinstance(entity, Expression):
-            #     expression = entity
-            #     self.left = Node(expression.first_attr)
-            #     self.entity = expression.second_attr
-            #     self.right = Node(expression.thir_attr)
-            # else:
-                if isinstance(entity, Entity):   
-                    self.entity = entity
-                    self.left = Node(None)
-                    self.right = Node(None)
+        # Si c'est une feuille
+        if arbre.left is None and arbre.right is None:
+            return arbre.entity
         else:
-            self.entity = None
+            left = SyntaxTree.convertToSQL(arbre.left)
+            right = SyntaxTree.convertToSQL(arbre.right)
+            
+            racine = arbre.entity
+            # Cas où le noeud interne est l'opération = ou != de Select
+            if racine.name == "=" or racine.name == "!=":
+                return (left, racine.name, right)
+            else:
+                request = Request(arbre)
+                request.make_request(left,right)
+
+
+
+
+    
+
+
 
 
     # https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
