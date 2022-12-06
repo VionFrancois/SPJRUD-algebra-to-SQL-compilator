@@ -87,7 +87,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
                 else:
-                    subTree.left = Node(Entity(paramLst[1])) # Relation (table)
+                    subTree.left = Node(Entity(paramLst[0])) # Relation (table)
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
@@ -111,7 +111,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
                 else:
-                    subTree.left = Node(Entity(paramLst[1])) # Relation (table)
+                    subTree.left = Node(Entity(paramLst[0])) # Relation (table)
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
@@ -136,11 +136,6 @@ class SyntaxTree():
 
 
         
-
-        
-                        
-
-
 
 
 

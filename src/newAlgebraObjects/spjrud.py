@@ -1,6 +1,6 @@
-from entities import Expression
-from entities import ExpressionWithConstant
-from entities import ExpressionWithRelations
+from newAlgebraObjects.entities import Expression
+from newAlgebraObjects.entities import ExpressionWithConstant
+from newAlgebraObjects.entities import ExpressionWithRelations
 from enum import Enum
 
 class Operation(Enum):
