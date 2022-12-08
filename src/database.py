@@ -28,6 +28,19 @@ class DataBase(object):
         finally:
             connection.close()
 
+    def verify(self, column, table):
+        connection = sqlite3.connect(self.file_name)
+        cursor = connection.cursor()
+        res = cursor.execute("pragma table_info("+table+");")
+        data = res.fetchall()
+        for i in range(len(data)):
+            if data[i][1] == column:
+                connection.close()
+                return True
+
+        connection.close()
+        return False
+
     def display(self):
         temp = Relation(self.name_of_relation, self.attributes, self.data)
         return temp.__str__()

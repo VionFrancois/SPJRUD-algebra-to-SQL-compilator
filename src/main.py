@@ -32,11 +32,12 @@ if __name__ == "__main__":
     LOG = "request.log"
 
 
-    if len(argv) < 2:
-        print("please put database as second argument")
-        exit()
+    # if len(argv) < 2:
+    #     print("please put database as second argument")
+    #     exit()
         
-    database = DataBase(argv[1])
+    #database = DataBase(argv[1])
+    database = DataBase("src/test.db")
     print("please enter a statement.")
 
     previous_request = get_previous_request(LOG)

@@ -104,6 +104,7 @@ class SyntaxTree():
         # Récupération des opérandes
         paramLst = []
         paramStr = ""
+        crochet = False # Permet de gérer le cas de plusieurs paramètres dans Project
         par = 0
         i += 1
         while param != 0:
@@ -111,11 +112,16 @@ class SyntaxTree():
                 par += 1
             if requete[i] == ")" and par > 0:
                 par -= 1
-            if (requete[i] == ",") and par == 0:
+            if (requete[i] == ",") and par == 0 and not crochet:
                 paramLst.append(paramStr)
                 paramStr = ""
                 param -= 1
             else:
+                if requete[i] == "[":
+                    crochet = True
+                elif requete[i] == "]":
+                    crochet = False
+
                 paramStr += requete[i]
 
             if(i == len(requete) -1):
