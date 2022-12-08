@@ -8,6 +8,9 @@ class Operation(Enum):
     DIFFERENT = 1
 
 class Select(ExpressionWithConstant):
+    """
+Please make sure this is the correct syntax : Select(attribute,=/!=,constant,relation)
+    """
 
     def __init__(self, attribute, operation, constant, relation):
         if(isinstance(operation, Operation)):
@@ -28,17 +31,29 @@ class Select(ExpressionWithConstant):
 
 
 class Project(Expression):
-    
-    def __init__(self, attribute, relation):
-        super().__init__("Project",  relation, attribute)
+    """
+Please make sure this is the correct syntax : Project([attribute1,attribute2, ...],relation) or Project([attribute],relation)
+    """
+
+    def __init__(self, attributs, relation):
+        self.multiple_projects = [attributs]
+        if(type(attributs) == list):
+            self.multiple_projects = [Project(attribut) for attribut in attributs]
+        else:
+            super().__init__("Project",  relation, attributs)
     
     def __str__(self):
-        return f"Project({self.attribute.__str__()},{self.relation.__str__()})"
+        attributes = ", ".join([attribute.__str__() for attribute in self.multiple_projects])
+        return f"Project([{attributes}],{self.relation.__str__()})"
 
     def convert_to_sql(self):
-        return f"SELECT {self.attribute.name} FROM ({self.relation.name})"
+        attributes = ", ".join([attribute.name for attribute in self.multiple_projects])
+        return f"SELECT {attributes} FROM ({self.relation.name})"
 
 class Join(ExpressionWithRelations):
+    """
+Please make sure this is the correct syntax : Join(relation1,relation2)
+    """
 
     def __init__(self, relation1, relation2):
         super().__init__("Join", relation1, relation2)
@@ -50,6 +65,9 @@ class Join(ExpressionWithRelations):
         return f"SELECT * FROM ({self.relation1.name}) NATURAL JOIN ({self.relation2.name})"
 
 class Rename(ExpressionWithConstant):
+    """
+Please make sure this is the correct syntax : Rename(attribute,constant,relation)
+    """
 
     def __init__(self, attribute, constant, relation):
         super().__init__("Rename", attribute, relation, constant)
@@ -61,6 +79,9 @@ class Rename(ExpressionWithConstant):
         return f"SELECT {self.attribute.name} AS '{self.constant.name}' FROM ({self.relation.name})"
 
 class Union(ExpressionWithRelations):
+    """
+Please make sure this is the correct syntax : Union(relation1,relation2)
+    """
 
     def __init__(self, relation1, relation2):
         super().__init__("Union", relation1, relation2)
@@ -72,6 +93,9 @@ class Union(ExpressionWithRelations):
         return f"SELECT * FROM ({self.relation1.name}) UNION SELECT * FROM ({self.relation2.name})"
 
 class Difference(ExpressionWithRelations):
+    """
+Please make sure this is the correct syntax : Difference(relation1,relation2)
+    """
 
     def __init__(self, relation1, relation2):
             super().__init__("Difference", relation1, relation2)

@@ -1,18 +1,21 @@
 import re
+from spjrud import *
 
+# Union(([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)),([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)))
 CONSTANT = r"[a-zA-Z0-9]+"
 ATTRIBUTE = CONSTANT
-RELATION = r"[a-zA-Z0-9\(\),]+"
+ATTRIBUTES = r"[a-zA-Z0-9,]+"
+RELATION = r"([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]\))"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
-PROJECT = r"Project\("+ ATTRIBUTE +r"," + RELATION + r"\)"
+PROJECT = r"Project\(\["+ ATTRIBUTES +r"\]," + RELATION + r"\)"
 JOIN = r"Join\(" + RELATION + r","+ RELATION + r"\)"
 RENAME = r"Rename\(" + ATTRIBUTE +r"," + CONSTANT +r"," + RELATION+ r"\)"
 UNION = r"Union\("+ RELATION+r"," + RELATION + r"\)"
 DIFFERENCE = r"Difference\("+ RELATION + r","+ RELATION +r"\)"
 
 SPJRUD_REGEX = [SELECT, PROJECT, JOIN, RENAME, UNION, DIFFERENCE]
-SPJRUD = ["Select", "Project", "Join", "Rename", "Union", "Difference"]
+SPJRUD = {"Select" : Select, "Project" : Project, "Join" : Join, "Rename" : Rename, "Union" : Union, "Difference" : Difference}
 
 def remove_space(s):
     res = ""
@@ -85,6 +88,9 @@ def syntax_is_correct(s):
         return answer
     except Exception as e:
         print(e)
+        for i in SPJRUD:
+            if i in s:
+                print(SPJRUD[i].__doc__)
         return False
 
 def split(delim1, delim2, forbidden,s):
@@ -112,8 +118,8 @@ l = "Project(Project(1,Join(2, 3, 4)))" #faux
 print(syntax_is_correct(remove_space(l)))
 l = "Select(id, =, b, Join(b, c))"
 print(syntax_is_correct(remove_space(l)))
+print(syntax_is_correct(remove_space("Project(Att,Re)"))) #faux
 """
-
 
 
 

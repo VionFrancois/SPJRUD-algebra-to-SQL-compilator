@@ -5,6 +5,7 @@ from sys import argv
 from database import DataBase
 from request import Request
 import syntax
+from SyntaxTree import SyntaxTree
 
 import readline #utilisé pour remplir l'input avec les précédentes requêtes
 
@@ -57,11 +58,12 @@ if __name__ == "__main__":
         if pointer_file == 0 and inp == "&":
             print("no more request")
             continue
-
-        if not syntax.syntax_is_correct(syntax.remove_space(inp)):
+        inp = syntax.remove_space(inp)
+        if not syntax.syntax_is_correct(inp):
             continue
         else:
-            #TODO manque plus que l'execution de la requete apres la décomposition
+            tree = SyntaxTree(inp)
+            print(SyntaxTree.convertToSQL(tree.root))
             if not inp in previous_request:
                 new_request.append(inp)        
     

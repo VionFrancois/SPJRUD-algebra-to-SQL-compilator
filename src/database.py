@@ -10,6 +10,8 @@ class DataBase(object):
         self.data = None
         self.attributes = None
         self.name_of_relation = None
+
+    #TODO check existence des attributs
         
     def execute(self, request, name_of_table):
         try:
