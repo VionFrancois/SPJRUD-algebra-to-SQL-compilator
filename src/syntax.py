@@ -5,7 +5,7 @@ from spjrud import *
 CONSTANT = r"[a-zA-Z0-9]+"
 ATTRIBUTE = CONSTANT
 ATTRIBUTES = r"[a-zA-Z0-9,]+"
-RELATION = r"([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]\))"
+RELATION = r"(([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)))"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
 PROJECT = r"Project\(\["+ ATTRIBUTES +r"\]," + RELATION + r"\)"
@@ -105,7 +105,7 @@ def split(delim1, delim2, forbidden,s):
                 temp += s[i]
     return res
 
-"""
+
 l = "Select(Country,=,Mali,CC)"
 print(syntax_is_correct(remove_space(l))) #vrai
 l = "Select(country, egual, Mali, CC)"
@@ -118,8 +118,12 @@ l = "Project(Project(1,Join(2, 3, 4)))" #faux
 print(syntax_is_correct(remove_space(l)))
 l = "Select(id, =, b, Join(b, c))"
 print(syntax_is_correct(remove_space(l)))
-print(syntax_is_correct(remove_space("Project(Att,Re)"))) #faux
-"""
+l = "Project(Att,Re)"
+print(syntax_is_correct(remove_space(l))) #faux
+l = "Project([att1,att2,att3],re1)"
+print(syntax_is_correct(remove_space(l))) #vrai
+l = "Join(re1, re2, re3)"
+print(syntax_is_correct(remove_space(l))) #faux
 
 
 
