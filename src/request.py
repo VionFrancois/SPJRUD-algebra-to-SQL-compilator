@@ -21,6 +21,7 @@ class Request(object):
             else:
                 obj = Select(Attribute(param[0], Relation(relation)), Operation.DIFFERENT, Constant(param[1]), Relation(relation))
         elif self.type == "Project":
+            # TODO : Convertir le multi paramètres (string) en liste
             obj = Project(Attribute(param[0], Relation(relation)), Relation(relation))
         elif self.type == "Join":
             obj = Join(Relation(relation), Relation(param[0]))

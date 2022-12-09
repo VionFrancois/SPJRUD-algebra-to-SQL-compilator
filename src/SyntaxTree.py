@@ -86,7 +86,7 @@ class SyntaxTree():
                 rep = True
         return rep
 
-    def makeTree(requete : str):
+    def makeTree(requete : str): # TODO : Paramètre database
         # Récupération de l'opérateur
         i = 0
         opStr = ""
@@ -140,6 +140,7 @@ class SyntaxTree():
 
                 subTree = Node(Entity("Select"))
                 subTree.left = Node(Entity(paramLst[1])) # Opérateur
+                # TODO : Vérifier ici les relations et les attributs
                 subTree.left.left = Node(Entity(paramLst[0])) # Attribut
                 subTree.left.right = Node((Entity(paramLst[2]))) # Constante
 

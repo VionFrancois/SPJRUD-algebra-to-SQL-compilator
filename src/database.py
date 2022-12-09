@@ -22,10 +22,10 @@ class DataBase(object):
         except sqlite3.Error as e:
             print(f"The request '{request}' has failed\nDetailed error -> {str(e)}")
 
-    def verify(self, column, table):
+    def verifyAtt(self, column, table):
         connection = sqlite3.connect(self.file_name)
         cursor = connection.cursor()
-        res = cursor.execute("pragma table_info("+table+");")
+        res = cursor.execute("pragma table_info("+table+")")
         data = res.fetchall()
         for i in range(len(data)):
             if data[i][1] == column:
@@ -34,6 +34,18 @@ class DataBase(object):
 
         connection.close()
         return False
+
+    def verifyTable(self, table):
+        connection = sqlite3.connect(self.file_name)
+        cursor = connection.cursor()
+        res = cursor.execute("pragma table_info("+table+")")
+        data = res.fetchall()
+        if data == []:
+            connection.close()
+            return False
+
+        connection.close()
+        return True
 
     def display(self):
         temp = Relation("resulting table", self.attributes, self.data)

@@ -39,6 +39,9 @@ if __name__ == "__main__":
     #database = DataBase(argv[1])
     database = DataBase("src/test.db")
     print("please enter a statement.")
+    print(database.verifyAtt("contacts","osef"))
+    print(database.verifyTable("UwU"))
+
 
     previous_request = get_previous_request(LOG)
     pointer_file = len(previous_request)
