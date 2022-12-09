@@ -64,7 +64,9 @@ if __name__ == "__main__":
             continue
         else:
             tree = SyntaxTree(inp)
-            print(SyntaxTree.convertToSQL(tree.root))
+            request = SyntaxTree.convertToSQL(tree.root)
+            database.execute(request)
+            database.display()
             if not inp in previous_request:
                 new_request.append(inp)        
     

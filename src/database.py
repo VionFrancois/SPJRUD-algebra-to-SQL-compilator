@@ -9,24 +9,18 @@ class DataBase(object):
         self.file_name = file_name
         self.data = None
         self.attributes = None
-        self.name_of_relation = None
 
     #TODO check existence des attributs
         
-    def execute(self, request, name_of_table):
+    def execute(self, request):
         try:
             connection = sqlite3.connect(self.file_name)
-            if(type(name_of_table) != str):
-                raise Exception()
-            self.name_of_relation = name_of_table
-            cursor = connection.execute(request)
+            cursor = connection.cursor().execute(request)
             self.data = cursor.fetchall()
-            self.attributes = [Attribute(att[0], Relation(self.name_of_relation)) for att in cursor.description]
-            self.relation = name_of_table
+            self.attributes = [Attribute(att[0], "resulting table") for att in cursor.description]
+            connection.close()
         except sqlite3.Error as e:
             print(f"The request '{request}' has failed\nDetailed error -> {str(e)}")
-        finally:
-            connection.close()
 
     def verify(self, column, table):
         connection = sqlite3.connect(self.file_name)
@@ -42,5 +36,5 @@ class DataBase(object):
         return False
 
     def display(self):
-        temp = Relation(self.name_of_relation, self.attributes, self.data)
+        temp = Relation("resulting table", self.attributes, self.data)
         return temp.__str__()

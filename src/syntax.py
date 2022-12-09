@@ -2,10 +2,10 @@ import re
 from spjrud import *
 
 # Union(([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)),([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)))
-CONSTANT = r"[a-zA-Z0-9]+"
+CONSTANT = r"[a-zA-Z0-9_]+"
 ATTRIBUTE = CONSTANT
-ATTRIBUTES = r"[a-zA-Z0-9,]+"
-RELATION = r"(([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)))"
+ATTRIBUTES = r"[a-zA-Z0-9_*,]+"
+RELATION = r"(([a-zA-Z0-9_]+)|([a-zA-Z]+\([a-z-A-Z0-9_\(\),]+\)))"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
 PROJECT = r"Project\(\["+ ATTRIBUTES +r"\]," + RELATION + r"\)"
@@ -105,7 +105,7 @@ def split(delim1, delim2, forbidden,s):
                 temp += s[i]
     return res
 
-
+"""
 l = "Select(Country,=,Mali,CC)"
 print(syntax_is_correct(remove_space(l))) #vrai
 l = "Select(country, egual, Mali, CC)"
@@ -124,6 +124,6 @@ l = "Project([att1,att2,att3],re1)"
 print(syntax_is_correct(remove_space(l))) #vrai
 l = "Join(re1, re2, re3)"
 print(syntax_is_correct(remove_space(l))) #faux
-
+"""
 
 
