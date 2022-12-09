@@ -13,7 +13,7 @@ def check_file_presence(file : str) -> None:
 def check_file(file : str) -> None:
     try:
         check_file_extension(file)
-        # TODO : check_file_presence(file)
+        check_file_presence(file)
     except FileException as error: 
         print(error)
         exit()

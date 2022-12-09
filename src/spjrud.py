@@ -35,20 +35,20 @@ class Project(Expression):
 Please make sure this is the correct syntax : Project([attribute1,attribute2, ...],relation) or Project([attribute],relation)
     """
 
-    def __init__(self, attributs, relation):
-        self.multiple_projects = [attributs]
-        if(type(attributs) == list):
-            self.multiple_projects = [Project(attribut) for attribut in attributs]
+    def __init__(self, attributes, relation):
+        self.multiple_projects = [attributes]
+        if(type(attributes) == list):
+            self.multiple_projects = [Project(attribut, relation) for attribut in attributes]
         else:
-            super().__init__("Project",  relation, attributs)
-    
+            super().__init__("Project",  relation, attributes)
+
     def __str__(self):
         attributes = ", ".join([attribute.__str__() for attribute in self.multiple_projects])
         return f"Project([{attributes}],{self.relation.__str__()})"
 
     def convert_to_sql(self):
-        attributes = ", ".join([attribute.name for attribute in self.multiple_projects])
-        return f"SELECT {attributes} FROM ({self.relation.name})"
+        attributes = ", ".join([project.attribute.name for project in self.multiple_projects])
+        return f"SELECT {attributes} FROM ({self.multiple_projects[0].relation.name})"
 
 class Join(ExpressionWithRelations):
     """
