@@ -37,7 +37,7 @@ if __name__ == "__main__":
     #     exit()
         
     #database = DataBase(argv[1])
-    database = DataBase("src/test.db")
+    database = DataBase("test.db")
     print("please enter a statement.")
     print(database.verifyAtt("contacts","osef"))
     print(database.verifyTable("UwU"))
@@ -60,14 +60,17 @@ if __name__ == "__main__":
             break
 
         if pointer_file == 0 and inp == "&":
-            print("no more request")
+            print("no more request...returning to the bottom")
+            pointer_file = len(previous_request)
             continue
+
         inp = syntax.remove_space(inp)
         if not syntax.syntax_is_correct(inp):
             continue
         else:
             tree = SyntaxTree(inp)
             request = SyntaxTree.convertToSQL(tree.root)
+            print("\nConverted to SQL : " + request)
             database.execute(request)
             database.display()
             if not inp in previous_request:

@@ -57,7 +57,7 @@ class Relation(Entity):
     def __printTable(self):
         length = len(f"{self.attributes[0].name : <25} |") * len(self.attributes)
 
-        s = f"{self.name.upper()} |"
+        s = f"|"
         
         for i in range(0, len(self.attributes)):
             s += f"{self.attributes[i].name.upper() : <25} |"
@@ -71,7 +71,7 @@ class Relation(Entity):
                     s += f"{self.tuples[i][j] : <25} |"
                 s += "\n"
         
-        s = "-" * (length + 1) + "\n" + s + "-" * (length + 1 )+ "\n"
+        s =f"\n{self.name}:\n\n" + "-" * (length + 1) + "\n" + s + "-" * (length + 1 )+ "\n"
         return s
         
 

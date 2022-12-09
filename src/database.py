@@ -15,12 +15,15 @@ class DataBase(object):
     def execute(self, request):
         try:
             connection = sqlite3.connect(self.file_name)
-            cursor = connection.cursor().execute(request)
+            cursor = connection.cursor()
+            res = cursor.execute(request)
             self.data = cursor.fetchall()
-            self.attributes = [Attribute(att[0], "resulting table") for att in cursor.description]
-            connection.close()
+            self.attributes = [Attribute(att[0], Relation("resulting table")) for att in cursor.description]
         except sqlite3.Error as e:
             print(f"The request '{request}' has failed\nDetailed error -> {str(e)}")
+        finally:
+            cursor.close()
+            connection.close()
 
     def verifyAtt(self, column, table):
         connection = sqlite3.connect(self.file_name)
@@ -49,4 +52,4 @@ class DataBase(object):
 
     def display(self):
         temp = Relation("resulting table", self.attributes, self.data)
-        return temp.__str__()
+        print(temp.__str__())
