@@ -36,8 +36,8 @@ if __name__ == "__main__":
     #     print("please put database as second argument")
     #     exit()
         
-    database = DataBase(argv[1])
-    # database = DataBase("src/test.db")
+    #database = DataBase(argv[1])
+    database = DataBase("src/test.db")
     print("please enter a statement.")
     print(database.verifyAtt("contacts","osef"))
     print(database.verifyTable("UwU"))
