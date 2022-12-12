@@ -68,9 +68,9 @@ def syntax_is_correct(s):
     try:
         is_closed, last_parenthesis = is_there_enough_parenthesis(s)
         if(is_closed < 0):
-            raise Exception(f"there is too many parenthesis:\n{s}\n"+ " "*(last_parenthesis) +"^")
+            raise Exception(f"There is too many parenthesis:\n{s}\n"+ " "*(last_parenthesis) +"^")
         elif(is_closed > 0):
-            raise Exception(f"the parenthesis at index {last_parenthesis} is not closed:\n{s}\n" + " "*(last_parenthesis) + "^")
+            raise Exception(f"The parenthesis at index {last_parenthesis} is not closed:\n{s}\n" + " "*(last_parenthesis) + "^")
         answer = False
         for i in SPJRUD_REGEX:
             if(re.match(i, s) != None):
@@ -78,7 +78,7 @@ def syntax_is_correct(s):
                 break
 
         if(not answer):
-            raise Exception(f"Syntax error, the part '{s}' is wrong")
+            raise Exception(f"The part '{s}' is wrong.")
 
         begin_of_the_request = search_under_request(s)
         if begin_of_the_request != -1:
@@ -87,7 +87,7 @@ def syntax_is_correct(s):
             answer = syntax_is_correct(under_request)                
         return answer
     except Exception as e:
-        print(e)
+        print("Syntax error.", e)
         for i in SPJRUD:
             if i in s:
                 print(SPJRUD[i].__doc__)
