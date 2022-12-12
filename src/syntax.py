@@ -1,7 +1,6 @@
 import re
 from spjrud import *
 
-# Union(([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)),([a-zA-Z0-9]+)|([a-zA-Z]+\([a-z-A-Z0-9\(\),]+\)))
 CONSTANT = r"[a-zA-Z0-9_]+"
 ATTRIBUTE = CONSTANT
 ATTRIBUTES = r"[a-zA-Z0-9_*,]+"
