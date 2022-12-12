@@ -105,25 +105,5 @@ def split(delim1, delim2, forbidden,s):
                 temp += s[i]
     return res
 
-"""
-l = "Select(Country,=,Mali,CC)"
-print(syntax_is_correct(remove_space(l))) #vrai
-l = "Select(country, egual, Mali, CC)"
-print(syntax_is_correct(remove_space(l))) #faux
-l = "Select(country, =, b, Join(R1, R2)"
-print(syntax_is_correct(remove_space(l))) #faux
-l = "Project(1, Union(un, deux))"
-print(syntax_is_correct(remove_space(l))) #faux
-l = "Project(Project(1,Join(2, 3, 4)))" #faux
-print(syntax_is_correct(remove_space(l)))
-l = "Select(id, =, b, Join(b, c))"
-print(syntax_is_correct(remove_space(l)))
-l = "Project(Att,Re)"
-print(syntax_is_correct(remove_space(l))) #faux
-l = "Project([att1,att2,att3],re1)"
-print(syntax_is_correct(remove_space(l))) #vrai
-l = "Join(re1, re2, re3)"
-print(syntax_is_correct(remove_space(l))) #faux
-"""
 
 
