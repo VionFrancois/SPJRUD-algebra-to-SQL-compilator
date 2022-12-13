@@ -37,7 +37,7 @@ if __name__ == "__main__":
     #     exit()
         
     #database = DataBase(argv[1])
-    database = DataBase("src/test.db")
+    database = DataBase("test.db")
     print("please enter a statement.")
     print(database.verifyAtt("contacts","osef"))
     print(database.verifyTable("UwU"))

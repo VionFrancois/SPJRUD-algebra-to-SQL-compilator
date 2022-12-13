@@ -1,21 +1,16 @@
 from entities import *
 from spjrud import *
 from request import *
+from database import *
 
 class Node():
 
     def __init__(self, entity) -> None:
         if entity is not None:
-            # if isinstance(entity, Expression):
-            #     expression = entity
-            #     self.left = Node(expression.first_attr)
-            #     self.entity = expression.second_attr
-            #     self.right = Node(expression.thir_attr)
-            # else:
-                if isinstance(entity, Entity):   
-                    self.entity = entity
-                    self.left = Node(None)
-                    self.right = Node(None)
+            if isinstance(entity, Entity):   
+                self.entity = entity
+                self.left = Node(None)
+                self.right = Node(None)
         else:
             self.entity = None
 
@@ -86,7 +81,7 @@ class SyntaxTree():
                 rep = True
         return rep
 
-    def makeTree(requete : str): # TODO : Paramètre database
+    def makeTree(requete : str):
         # Récupération de l'opérateur
         i = 0
         opStr = ""
@@ -140,7 +135,6 @@ class SyntaxTree():
 
                 subTree = Node(Entity("Select"))
                 subTree.left = Node(Entity(paramLst[1])) # Opérateur
-                # TODO : Vérifier ici les relations et les attributs
                 subTree.left.left = Node(Entity(paramLst[0])) # Attribut
                 subTree.left.right = Node((Entity(paramLst[2]))) # Constante
 
@@ -214,11 +208,12 @@ class SyntaxTree():
         return subTree
 
 
-    def convertToSQL(arbre : Node):
+    def convertToSQL(arbre : Node): # TODO : Paramètre Database
         # Cas de base : L'arbre est une feuille et retourne son élément
         # Cas de récurrence : L'arbre n'est pas une feuille et est donc une expression ou un opérateur
 
         # Si c'est une feuille
+        # TODO : Vérifier ici les relations et les attributs avec entity.type
         if arbre.left.entity is None and arbre.right.entity is None:
             return arbre.entity.name
         else:

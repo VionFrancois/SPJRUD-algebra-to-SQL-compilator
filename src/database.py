@@ -9,9 +9,9 @@ class DataBase(object):
         self.file_name = file_name
         self.data = None
         self.attributes = None
-
-    #TODO check existence des attributs
         
+    # TODO : Gérer le cas de rename dans le bas de l'arbre
+
     def execute(self, request):
         try:
             connection = sqlite3.connect(self.file_name)
@@ -25,18 +25,25 @@ class DataBase(object):
             cursor.close()
             connection.close()
 
-    def verifyAtt(self, column, table):
+    def fetchAllAttributes(self, table):
         connection = sqlite3.connect(self.file_name)
         cursor = connection.cursor()
         res = cursor.execute("pragma table_info("+table+")")
         data = res.fetchall()
+        attributes = []
         for i in range(len(data)):
-            if data[i][1] == column:
-                connection.close()
-                return True
+            attributes.append(data[i][1])  
 
         connection.close()
-        return False
+        return attributes
+
+
+    def verifyAtt(self, column, table):
+        attributes = self.fetchAllAtributes(table)
+        if column in attributes:
+            return True
+        else:
+            return False
 
     def verifyTable(self, table):
         connection = sqlite3.connect(self.file_name)
@@ -53,3 +60,19 @@ class DataBase(object):
     def display(self):
         temp = Relation("resulting table", self.attributes, self.data)
         print(temp.__str__())
+
+
+
+class ArityException(Exception):
+    """
+    S'occupe des exceptions dues à la validation de la requête
+    """
+
+    def __init__(self, entity : str, table : str, db : DataBase) -> None:
+        self.entity = entity
+        self.table = table
+        self.db = db
+        super().__init__("Error occured with the arity of an element")
+
+    def __str__(self) -> str:
+        return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\n" + "The table "+self.table+" contrains the attibutes : "+self.db.fetchAllAttributes
