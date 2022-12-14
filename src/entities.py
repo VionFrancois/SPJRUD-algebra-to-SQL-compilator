@@ -45,15 +45,17 @@ class Relation(Entity):
             raise InstanceError(tuples, list, True)
         else:
             raise InstanceError("the content of " + str(tuples), tuple)
-        
 
+    """
+    affiche une table si et seulement les attributs : attributes et tuples sont non nuls
+    Sinon, affiche le nom de la relation    
+    """
     def __str__(self) -> str:
         if(self.attributes != None != self.tuples):
             return self.__printTable()
         else:
             return f"relation : {self.name}"
 
-    #méthode privée
     def __printTable(self):
         length = len(f"{self.attributes[0].name : <25} |") * len(self.attributes)
 
@@ -77,7 +79,9 @@ class Relation(Entity):
 
 
 class Attribute(Entity):
-
+    """
+    L'attribut doit avoir son nom et la relation à laquelle il appartient
+    """
     def __init__(self, name, relation):
         super().__init__(name)
 
@@ -135,7 +139,9 @@ class Expression(Relation):
 
 
 class ExpressionWithConstant(Expression):
-
+    """
+    Sera utilisé pour les expressions : Select et Rename.
+    """
     def __init__(self, name, attribute, relation, constant):
         if(isinstance(constant, Constant) and isinstance(attribute, Attribute) and isinstance(relation, Relation)):
             super().__init__(name, relation, attribute, None, constant)
@@ -150,7 +156,9 @@ class ExpressionWithConstant(Expression):
             raise InstanceError(relation, Relation)
 
 class ExpressionWithRelations(Expression):
-
+    """
+    Sera utilisé pour les expressions : Join, Union, Difference
+    """
     def __init__(self, name, relation1, relation2):
 
         if(isinstance(relation1, Relation) and isinstance(relation2, Relation)):
@@ -165,7 +173,9 @@ class ExpressionWithRelations(Expression):
 
 
 class InstanceError(Exception):
-
+    """
+    Ce type d'exception sera lancé dans le cas où le type d'un argument est invalide
+    """
     def __init__(self, arg, class_, can_be_None = False):
         self.message = f"'{arg}' has to be the type of {class_}"
         if(can_be_None):

@@ -1,3 +1,8 @@
+"""
+Ce module utilisé pour vérifier si le fichier mis en paramètre correspond bien à un 
+fichier ".db" et qui se trouve bien dans le répertoire 
+"""
+
 from FileException import FileException
 from os import listdir, getcwd
 
@@ -12,7 +17,7 @@ def check_file_presence(file : str) -> None:
 
 def check_file(file : str) -> None:
     try:
-        check_file_extension(file)
+        check_file_extension(file)  
         check_file_presence(file)
     except FileException as error: 
         print(error)

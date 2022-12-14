@@ -39,7 +39,7 @@ class DataBase(object):
 
 
     def verifyAtt(self, column, table):
-        attributes = self.fetchAllAtributes(table)
+        attributes = self.fetchAllAttributes(table)
         if column in attributes:
             return True
         else:

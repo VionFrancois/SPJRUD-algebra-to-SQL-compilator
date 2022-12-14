@@ -9,6 +9,38 @@ from SyntaxTree import SyntaxTree
 
 import readline #utilisé pour remplir l'input avec les précédentes requêtes
 
+VERSION = 1
+
+def get_doc():
+    res = f"""
+######WELCOME IN THE SPJURD COMPILER !######
+
+Creator : François Vion and Julien Ladeuze.
+Purpose : database course from the university of Mons.
+Version : {VERSION}
+Release : 23/12/2022
+Goal    : Convert a SPJRUD query into SQL while respecting some constraint such as:
+        arity, existence, syntax, ect...
+
+Utils : EXECUTION -> python3 main.py file.db [-h]
+                     => 'file.db' must be in the current dir and must be a database file (.db).
+                     => '-h' print this documentation.
+        PROMPT    -> '&' to get well formatted query from a previous session (from file request.log).
+                      When no more query can be requested, returning to the bottom of the file.
+                  -> Queries in the SPJRUD format :
+                     => SELECT     : Select(attribute, =|!=, constant, relation)
+                     => PROJECT    : Project([attribute1,...], relation)
+                     => JOIN       : Join(relation1, relation2)
+                     => RENAME     : Rename(attribute, constant, relation)
+                     => UNION      : Union(relation1, relation2)
+                     => DIFFERENCE : Difference(relation1, relation2) 
+                  -> 'exit' to exit the program
+
+!PREREQUISITE!
+ Python must have the version : 3.10
+    """
+    return res
+
 
 #https://stackoverflow.com/questions/2533120/show-default-value-for-editing-on-python-input-possible/2533142#2533142
 def rlinput(prompt, prefill='test'):
@@ -31,16 +63,21 @@ def get_previous_request(file_name):
 if __name__ == "__main__":
     LOG = "request.log"
 
+    if "-h" in argv:
+        print(get_doc())
+        exit()
 
-    # if len(argv) < 2:
-    #     print("please put database as second argument")
-    #     exit()
+    if len(argv) < 2:
+        print("please put database file as second argument or type python3 main.py -h for more information")
+        exit()
+    
+
         
-    #database = DataBase(argv[1])
-    database = DataBase("test.db")
+    database = DataBase(argv[1])
+    #database = DataBase("test.db")
     print("please enter a statement.")
-    print(database.verifyAtt("contacts","osef"))
-    print(database.verifyTable("UwU"))
+   # print(database.verifyAtt("contacts","osef"))
+   # print(database.verifyTable("UwU"))
 
 
     previous_request = get_previous_request(LOG)

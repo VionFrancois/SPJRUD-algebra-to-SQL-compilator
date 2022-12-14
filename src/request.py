@@ -2,7 +2,9 @@ from spjrud import *
 from entities import Attribute, Relation, Constant
 
 class Request(object):
-
+    """
+    Va pouvoir effectuer la conversion d'une requête SPJRUD en SQL à partir de chaînes de caractères mises en argument
+    """
     def __init__(self, Request_type):
         self.type = None
         self.sql = None
@@ -11,8 +13,8 @@ class Request(object):
             if(Request_type == i):
                 self.type = Request_type
 
+    # param est un tuple du type : (attribut, constante, relation2, operation)
     def make_request(self, param, relation):
-        # param = (attribut, constante, relation2, operation)
         if self.type == "Select":
             if(param[1] == "="):
                 obj = Select(Attribute(param[0], Relation(relation)), Operation.EQUAL, Constant(param[2]), Relation(relation))
@@ -32,6 +34,3 @@ class Request(object):
 
         self.sql = obj.convert_to_sql()
         return self.sql
-
-print(Request("Project").make_request("[att1]", "re"))
-print(Request("Project").make_request("[att1,att2,att3]", "re"))

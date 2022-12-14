@@ -1,3 +1,8 @@
+"""
+Module vérfiant la syntaxe d'une expression SPJRUD.
+"""
+
+#utilisation des regex
 import re
 from spjrud import *
 
@@ -62,7 +67,8 @@ def search_under_request(s):
             count_opened_parenthesis -= 1
     return -1
 
-    
+#On pose comme précondition que la chaine de caractère mise en argument
+#ne possède aucun espace
 def syntax_is_correct(s):
     try:
         is_closed, last_parenthesis = is_there_enough_parenthesis(s)
@@ -90,6 +96,7 @@ def syntax_is_correct(s):
         for i in SPJRUD:
             if i in s:
                 print(SPJRUD[i].__doc__)
+        print("type python3 main.py -h for more information")
         return False
 
 def split(delim1, delim2, forbidden,s):

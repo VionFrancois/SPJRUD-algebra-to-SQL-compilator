@@ -1,15 +1,22 @@
+"""
+- module représentant les expressions SPJRUD.
+- A noter que la documentation des classes sert dans le
+cas d'une exception issus d'une erreur de syntaxe. 
+"""
+
 from entities import Expression
 from entities import ExpressionWithConstant
 from entities import ExpressionWithRelations
 from enum import Enum
 
+#Représente l'égalité ou la différence pour l'expression Select.
 class Operation(Enum):
     EQUAL = 0
     DIFFERENT = 1
 
 class Select(ExpressionWithConstant):
     """
-Please make sure this is the correct syntax : Select(attribute,=/!=,constant,relation)
+Please make sure this is the correct syntax : Select(attribute,=/!=,constant,relation).
     """
 
     def __init__(self, attribute, operation, constant, relation):
@@ -32,7 +39,7 @@ Please make sure this is the correct syntax : Select(attribute,=/!=,constant,rel
 
 class Project(Expression):
     """
-Please make sure this is the correct syntax : Project([attribute1,attribute2, ...],relation) or Project([attribute],relation)
+Please make sure this is the correct syntax : Project([attribute1,attribute2, ...],relation) or Project([attribute],relation).
     """
 
     def __init__(self, attributes, relation):
@@ -52,7 +59,7 @@ Please make sure this is the correct syntax : Project([attribute1,attribute2, ..
 
 class Join(ExpressionWithRelations):
     """
-Please make sure this is the correct syntax : Join(relation1,relation2)
+Please make sure this is the correct syntax : Join(relation1,relation2).
     """
 
     def __init__(self, relation1, relation2):
@@ -66,7 +73,7 @@ Please make sure this is the correct syntax : Join(relation1,relation2)
 
 class Rename(ExpressionWithConstant):
     """
-Please make sure this is the correct syntax : Rename(attribute,constant,relation)
+Please make sure this is the correct syntax : Rename(attribute,constant,relation).
     """
 
     def __init__(self, attribute, constant, relation):
@@ -80,7 +87,7 @@ Please make sure this is the correct syntax : Rename(attribute,constant,relation
 
 class Union(ExpressionWithRelations):
     """
-Please make sure this is the correct syntax : Union(relation1,relation2)
+Please make sure this is the correct syntax : Union(relation1,relation2).
     """
 
     def __init__(self, relation1, relation2):
@@ -94,7 +101,7 @@ Please make sure this is the correct syntax : Union(relation1,relation2)
 
 class Difference(ExpressionWithRelations):
     """
-Please make sure this is the correct syntax : Difference(relation1,relation2)
+Please make sure this is the correct syntax : Difference(relation1,relation2).
     """
 
     def __init__(self, relation1, relation2):
