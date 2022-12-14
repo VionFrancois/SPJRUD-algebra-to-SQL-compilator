@@ -10,14 +10,38 @@ class Entity(object):
      relation, ect...
     -Cette classe sert uniquement pour le référencement polymorphique
     """
-    def __init__(self, name):
+    def __init__(self, name, type = None):
         self.name = "unamed"
+        self.type = type
 
         if(type(name) == str):
             self.name = name
         
         else:
             raise InstanceError(name, str)
+
+class Operator(Entity):
+    def __init__(self,name):
+        super().__init__(name, 4)
+
+
+class Attribute(Entity):
+
+    def __init__(self, name, relation):
+        super().__init__(name, 2)
+
+        if(isinstance(relation ,Relation)):
+            self.relation = relation
+        else:
+            raise InstanceError(relation, Relation) 
+
+    def __eq__(self, obj):
+        return isinstance(obj, Attribute) and obj.name == self.name
+    
+    def __str__(self):
+        return f"attribute : {self.name}"
+
+
 
 class Relation(Entity):
     """
@@ -30,7 +54,7 @@ class Relation(Entity):
     Cet objet contiendra uniquement un nom (voir la classe Expression pour plus d'info).
     """
     def __init__(self, name, attributes = None, tuples = None):
-        super().__init__(name)
+        super().__init__(name, 1)
 
         if(type(attributes) == list and all(isinstance(attribute, Attribute) for attribute in attributes) or attributes == None):
             self.attributes = attributes
@@ -45,6 +69,15 @@ class Relation(Entity):
             raise InstanceError(tuples, list, True)
         else:
             raise InstanceError("the content of " + str(tuples), tuple)
+
+    def verifyAttribute(self, attr : Attribute):
+        if attr in self.attributes:
+            return True
+        else:
+            return False
+
+        
+
 
     """
     affiche une table si et seulement les attributs : attributes et tuples sont non nuls
@@ -97,7 +130,7 @@ class Attribute(Entity):
 class Constant(Entity):
 
     def __init__(self, name):
-        super().__init__(name)
+        super().__init__(name, 3)
 
     def __str__(self):
         return f"constant : {self.name}"

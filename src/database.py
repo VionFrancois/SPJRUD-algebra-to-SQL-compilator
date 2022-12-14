@@ -32,12 +32,13 @@ class DataBase(object):
         data = res.fetchall()
         attributes = []
         for i in range(len(data)):
-            attributes.append(data[i][1])  
+            attributes.append(Attribute(data[i][1]))  
 
         connection.close()
         return attributes
 
 
+    # TODO : Obsolète
     def verifyAtt(self, column, table):
         attributes = self.fetchAllAttributes(table)
         if column in attributes:

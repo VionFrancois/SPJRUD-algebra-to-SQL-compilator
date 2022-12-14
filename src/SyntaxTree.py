@@ -81,7 +81,7 @@ class SyntaxTree():
                 rep = True
         return rep
 
-    def makeTree(requete : str):
+    def makeTree(requete : str, db : DataBase):
         # Récupération de l'opérateur
         i = 0
         opStr = ""
@@ -134,24 +134,30 @@ class SyntaxTree():
             case "Select":
 
                 subTree = Node(Entity("Select"))
-                subTree.left = Node(Entity(paramLst[1])) # Opérateur
-                subTree.left.left = Node(Entity(paramLst[0])) # Attribut
-                subTree.left.right = Node((Entity(paramLst[2]))) # Constante
+                subTree.left = Node(Operator(paramLst[1])) # Opérateur
+                subTree.left.left = Node(Attribute(paramLst[0])) # Attribut
+                subTree.left.right = Node((Constant(paramLst[2]))) # Constante
 
                 if SyntaxTree.isSubRequest(paramLst[3]):
                     subTree.right = SyntaxTree.makeTree(paramLst[3]) # Crée le sous arbre de la requête
                 else:
-                    subTree.right = Node(Entity(paramLst[3])) # Relation (table)
+                    if db.verifyTable(paramLst[3]):
+                        subTree.right = Node(Relation(paramLst[3], db.fetchAllAttributes(paramLst[3]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
                   
             case "Project":
 
                 subTree = Node(Entity("Project"))
-                subTree.left = Node(Entity(paramLst[0])) # Attribut
+                subTree.left = Node(Attribute(paramLst[0])) # Attribut
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
-                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
+                    if db.verifyTable(paramLst[1]):
+                        subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
                 
             case "Join":
 
@@ -160,23 +166,31 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
                 else:
-                    subTree.left = Node(Entity(paramLst[0])) # Relation (table)
+                    if db.verifyTable(paramLst[0]):
+                        subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
-                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
+                    if db.verifyTable(paramLst[1]):
+                        subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
 
             case "Rename":
 
                 subTree = Node(Entity("Rename"))
-                subTree.left = Node(Entity(paramLst[0]+":"+paramLst[1])) # ancienNom:nouveauNom
+                subTree.left = Node(Entity(paramLst[0]+":"+paramLst[1])) # ancienNom:nouveauNom # TODO : Gérer ce cas
 
                 if SyntaxTree.isSubRequest(paramLst[2]):
                     subTree.right = SyntaxTree.makeTree(paramLst[2]) # Crée le sous arbre de la requête
                 else:
-                    subTree.right = Node(Entity(paramLst[2])) # Relation (table)
-
+                    if db.verifyTable(paramLst[2]):
+                        subTree.right = Node(Relation(paramLst[2], db.fetchAllAttributes(paramLst[2]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
             case "Union":
 
                 subTree = Node(Entity("Union"))
@@ -184,13 +198,18 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
                 else:
-                    subTree.left = Node(Entity(paramLst[0])) # Relation (table)
-
+                    if db.verifyTable(paramLst[0]):
+                        subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                        
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
-                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
-
+                    if db.verifyTable(paramLst[1]):
+                        subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
             case "Difference":
 
                 subTree = Node(Entity("Difference"))
@@ -198,35 +217,42 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
                 else:
-                    subTree.left = Node(Entity(paramLst[1])) # Relation (table)
-
+                    if db.verifyTable(paramLst[0]):
+                        subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
-                    subTree.right = Node(Entity(paramLst[1])) # Relation (table)
-
+                    if db.verifyTable(paramLst[1]):
+                        subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
+                    else:
+                        raise ArityException() # TODO : Créer une arityexception pour les tables
         return subTree
 
 
-    def convertToSQL(arbre : Node): # TODO : Paramètre Database
+    def convertToSQL(arbre : Node, db : DataBase):
         # Cas de base : L'arbre est une feuille et retourne son élément
         # Cas de récurrence : L'arbre n'est pas une feuille et est donc une expression ou un opérateur
 
         # Si c'est une feuille
-        # TODO : Vérifier ici les relations et les attributs avec entity.type
         if arbre.left.entity is None and arbre.right.entity is None:
-            return arbre.entity.name
+            if arbre.entity.type == 1: # Relation (table)
+                return (arbre.entity.name, arbre.entity)
+            else:
+                return arbre.entity.name
         else:
             left = SyntaxTree.convertToSQL(arbre.left)
             right = SyntaxTree.convertToSQL(arbre.right)
             
             racine = arbre.entity
             # Cas où le noeud interne est l'opération = ou != de Select
+            # TODO : Gérer ce cas
             if racine.name == "=" or racine.name == "!=":
                 return (left, racine.name, right)
             else:
                 request = Request(arbre.entity.name)
-                return request.make_request(left,right)
+                return request.make_request(left,right,db)
 
     def display(self):
         self.root.display()
