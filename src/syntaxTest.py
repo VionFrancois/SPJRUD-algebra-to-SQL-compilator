@@ -1,5 +1,5 @@
 import syntax
-import SyntaxTree
+from SyntaxTree import *
 
 FIRST_ATTRIBUTE = "attributeONE"
 SECOND_ATTRIBUTE = "attributeTWO"
@@ -28,10 +28,14 @@ def check_error():
     print("Test two passed.")
 
 def global_test():
-    assert SyntaxTree.convertToSQL(SyntaxTree("Select(Country,=,Mali,CC)").root)
+    db = DataBase("test.db")
+    assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM contacts WHERE first_name = 'julien'"
+    assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
+    print("Test three passed")
         
 
 
 if __name__ == "__main__":
-    regex_test()
-    check_error()
+    global_test()
+    # regex_test()
+    # check_error()

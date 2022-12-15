@@ -21,7 +21,7 @@ class Request(object):
 
         if self.type == "Select":
 
-            if table.verifyAttribute(param[0]): # L'attribut existe dans la table
+            if table.verifyAttribute(Attribute(param[0])): # L'attribut existe dans la table
                 if(param[1] == "="):
                     obj = Select(Attribute(param[0]), Operation.EQUAL, Constant(param[2]), Relation(relation))
                 else:

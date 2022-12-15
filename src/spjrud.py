@@ -32,9 +32,9 @@ Please make sure this is the correct syntax : Select(attribute,=/!=,constant,rel
     
     def convert_to_sql(self):
         if(self.operation == Operation.EQUAL):
-            return f"SELECT * FROM ({self.relation.name}) WHERE ({self.attribute.name}) = '{self.constant.name}'"
+            return f"SELECT * FROM {self.relation.name} WHERE {self.attribute.name} = '{self.constant.name}'"
         else:
-            return f"SELECT * FROM ({self.relation.name}) WHERE ({self.attribute.name}) <> '{self.constant.name}'"
+            return f"SELECT * FROM {self.relation.name} WHERE {self.attribute.name} <> '{self.constant.name}'"
 
 
 class Project(Expression):

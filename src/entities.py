@@ -71,7 +71,7 @@ class Relation(Entity):
             raise InstanceError("the content of " + str(tuples), tuple)
 
     def verifyAttribute(self, attr : Attribute):
-        if Attribute(attr) in self.attributes:
+        if attr in self.attributes:
             return True
         else:
             return False
