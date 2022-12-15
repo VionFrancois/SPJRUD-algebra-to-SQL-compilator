@@ -2,11 +2,13 @@ from entities import *
 from spjrud import *
 from SyntaxTree import *
 
-firstReq = "Select(Country,=,Mali,CC)"
-secondReq = "Select(id,=,b,Join(b,c))"
+firstReq = "Select(first_name,=,julien,contacts)"
+secondReq = "Project([first_name,contact_id],contacts)"
 thirdReq = "Project([attr1,attr2], Re)"
 
-arbre = SyntaxTree(thirdReq)
-print(SyntaxTree.convertToSQL(arbre.root))
+db = DataBase("test.db")
 
+arbre = SyntaxTree(secondReq,db)
 arbre.display()
+print(SyntaxTree.convertToSQL(arbre.root,db)[0])
+

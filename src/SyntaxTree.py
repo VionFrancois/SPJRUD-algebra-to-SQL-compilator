@@ -69,8 +69,8 @@ class Node():
 
 class SyntaxTree():
 
-    def __init__(self, request : str) -> None:
-        self.root = SyntaxTree.makeTree(request)
+    def __init__(self, request : str,db : DataBase) -> None:
+        self.root = SyntaxTree.makeTree(request,db)
 
     
     def isSubRequest(request):
@@ -143,8 +143,8 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[3]):
                         subTree.right = Node(Relation(paramLst[3], db.fetchAllAttributes(paramLst[3]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
                   
             case "Project":
 
@@ -156,8 +156,8 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
                 
             case "Join":
 
@@ -168,16 +168,16 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[0]):
                         subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
 
             case "Rename":
 
@@ -189,8 +189,8 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[2]):
                         subTree.right = Node(Relation(paramLst[2], db.fetchAllAttributes(paramLst[2]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
             case "Union":
 
                 subTree = Node(Entity("Union"))
@@ -200,16 +200,16 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[0]):
                         subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
                         
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
             case "Difference":
 
                 subTree = Node(Entity("Difference"))
@@ -219,15 +219,15 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[0]):
                         subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    else:
-                        raise ArityException() # TODO : Créer une arityexception pour les tables
+                    # else:
+                        # raise ArityException() # TODO : Créer une arityexception pour les tables
         return subTree
 
 
@@ -242,8 +242,8 @@ class SyntaxTree():
             else:
                 return arbre.entity.name
         else:
-            left = SyntaxTree.convertToSQL(arbre.left)
-            right = SyntaxTree.convertToSQL(arbre.right)
+            left = SyntaxTree.convertToSQL(arbre.left, db)
+            right = SyntaxTree.convertToSQL(arbre.right, db)
             
             racine = arbre.entity
             # Cas où le noeud interne est l'opération = ou != de Select
@@ -252,7 +252,7 @@ class SyntaxTree():
                 return (left, racine.name, right)
             else:
                 request = Request(arbre.entity.name)
-                return request.make_request(left,right,db)
+                return request.make_request(left,right[0],right[1],db)
 
     def display(self):
         self.root.display()

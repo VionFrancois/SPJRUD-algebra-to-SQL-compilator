@@ -1,4 +1,5 @@
 import syntax
+import SyntaxTree
 
 FIRST_ATTRIBUTE = "attributeONE"
 SECOND_ATTRIBUTE = "attributeTWO"
@@ -26,6 +27,9 @@ def check_error():
     assert syntax.syntax_is_correct(syntax.remove_space(f"Select({FIRST_ATTRIBUTE}, !==, {CONSTANT}, {FIRST_RELATION})")) == False
     print("Test two passed.")
 
+def global_test():
+    assert SyntaxTree.convertToSQL(SyntaxTree("Select(Country,=,Mali,CC)").root)
+        
 
 
 if __name__ == "__main__":

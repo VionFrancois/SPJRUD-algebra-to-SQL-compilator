@@ -14,7 +14,7 @@ class Entity(object):
         self.name = "unamed"
         self.type = type
 
-        if(type(name) == str):
+        if isinstance(name,str):
             self.name = name
         
         else:
@@ -27,13 +27,13 @@ class Operator(Entity):
 
 class Attribute(Entity):
 
-    def __init__(self, name, relation):
+    def __init__(self, name):
         super().__init__(name, 2)
 
-        if(isinstance(relation ,Relation)):
-            self.relation = relation
-        else:
-            raise InstanceError(relation, Relation) 
+        # if(isinstance(relation ,Relation)):
+        #     self.relation = relation
+        # else:
+        #     raise InstanceError(relation, Relation) 
 
     def __eq__(self, obj):
         return isinstance(obj, Attribute) and obj.name == self.name
@@ -71,7 +71,7 @@ class Relation(Entity):
             raise InstanceError("the content of " + str(tuples), tuple)
 
     def verifyAttribute(self, attr : Attribute):
-        if attr in self.attributes:
+        if Attribute(attr) in self.attributes:
             return True
         else:
             return False
@@ -111,20 +111,20 @@ class Relation(Entity):
         
 
 
-class Attribute(Entity):
-    """
-    L'attribut doit avoir son nom et la relation à laquelle il appartient
-    """
-    def __init__(self, name, relation):
-        super().__init__(name)
+# class Attribute(Entity):
+#     """
+#     L'attribut doit avoir son nom et la relation à laquelle il appartient
+#     """
+#     def __init__(self, name, relation):
+#         super().__init__(name)
 
-        if(isinstance(relation ,Relation)):
-            self.relation = relation
-        else:
-            raise InstanceError(relation, Relation) 
+#         if(isinstance(relation ,Relation)):
+#             self.relation = relation
+#         else:
+#             raise InstanceError(relation, Relation) 
     
-    def __str__(self):
-        return f"attribute : {self.name}"
+#     def __str__(self):
+#         return f"attribute : {self.name}"
 
 
 class Constant(Entity):

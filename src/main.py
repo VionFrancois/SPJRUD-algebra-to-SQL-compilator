@@ -74,10 +74,7 @@ if __name__ == "__main__":
 
         
     database = DataBase(argv[1])
-    #database = DataBase("test.db")
     print("please enter a statement.")
-   # print(database.verifyAtt("contacts","osef"))
-   # print(database.verifyTable("UwU"))
 
 
     previous_request = get_previous_request(LOG)
@@ -105,6 +102,7 @@ if __name__ == "__main__":
         if not syntax.syntax_is_correct(inp):
             continue
         else:
+            # Lancement du programme
             tree = SyntaxTree(inp)
             request = SyntaxTree.convertToSQL(tree.root)
             print("\nConverted to SQL : " + request)

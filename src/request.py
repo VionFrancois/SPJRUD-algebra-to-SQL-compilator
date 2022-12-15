@@ -23,14 +23,15 @@ class Request(object):
 
             if table.verifyAttribute(param[0]): # L'attribut existe dans la table
                 if(param[1] == "="):
-                    obj = Select(Attribute(param[0], Relation(relation)), Operation.EQUAL, Constant(param[2]), Relation(relation))
+                    obj = Select(Attribute(param[0]), Operation.EQUAL, Constant(param[2]), Relation(relation))
                 else:
-                    obj = Select(Attribute(param[0], Relation(relation)), Operation.DIFFERENT, Constant(param[1]), Relation(relation))
+                    obj = Select(Attribute(param[0]), Operation.DIFFERENT, Constant(param[1]), Relation(relation))
             else:
-                raise ArityException(param[0].name,table.name, db)
+                e = ArityException(param[0],table.name,db)
+                raise e
 
         elif self.type == "Project":
-            attributes = [Attribute(attribute, Relation(relation)) for attribute in param[1:len(param) - 1].split(",")]
+            attributes = [Attribute(attribute) for attribute in param[1:len(param) - 1].split(",")]
             bool = True
             att = None
             for attribute in attributes:
@@ -40,15 +41,24 @@ class Request(object):
             
             if(bool): #Les attributs existent dans la table
                 obj = Project(attributes, Relation(relation))
+                table.attributes = [elem for elem in table.attributes if elem not in attributes]
             else:
                 raise ArityException(attribute.name, table.name, db)
 
         elif self.type == "Join":
-            obj = Join(Relation(relation), Relation(param[0]))
+            secondRel = param[0]
+            obj = Join(Relation(relation), Relation(secondRel))
+            # Fusionne les attributs des deux tables
+            for i in range(len(secondRel)):
+                if secondRel.attributes[i] not in table.attributes:
+                    table.attributes.append(secondRel.attributes[i])
+
+
         elif self.type == "Rename":
 
             if table.verifyAttribute(param[0]): # L'attribut existe dans la table
-                obj = Rename(Attribute(param[0], Relation(relation)), Constant(param[1]), Relation(relation))
+                obj = Rename(Attribute(param[0]), Constant(param[1]), Relation(relation))
+                table.attributes[table.attributes.index(param[0])] = param[0] # Renomme l'attribut dans la relation
             else:
                 raise ArityException(param[0].name, table.name, db)
 
@@ -58,5 +68,5 @@ class Request(object):
             obj = Difference(Relation(relation), Relation(param[0]))
 
         self.sql = obj.convert_to_sql()
-        # TODO : Retourner la table résultante de l'opération
+
         return (self.sql, table)

@@ -38,14 +38,6 @@ class DataBase(object):
         return attributes
 
 
-    # TODO : Obsolète
-    def verifyAtt(self, column, table):
-        attributes = self.fetchAllAttributes(table)
-        if column in attributes:
-            return True
-        else:
-            return False
-
     def verifyTable(self, table):
         connection = sqlite3.connect(self.file_name)
         cursor = connection.cursor()
@@ -76,4 +68,5 @@ class ArityException(Exception):
         super().__init__("Error occured with the arity of an element")
 
     def __str__(self) -> str:
-        return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\n" + "The table "+self.table+" contrains the attibutes : "+self.db.fetchAllAttributes
+        return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\n"
+        # TODO : Ajouter : "The table "+self.table+" contrains the attibutes : "+self.db.fetchAllAttributes(self.table)
