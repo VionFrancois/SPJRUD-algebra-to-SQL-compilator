@@ -16,9 +16,9 @@ class DataBase(object):
         try:
             connection = sqlite3.connect(self.file_name)
             cursor = connection.cursor()
-            res = cursor.execute(request)
+            res = cursor.execute(request[0])
             self.data = cursor.fetchall()
-            self.attributes = [Attribute(att[0], Relation("resulting table")) for att in cursor.description]
+            self.attributes = [Attribute(att[0]) for att in cursor.description]
         except sqlite3.Error as e:
             print(f"The request '{request}' has failed\nDetailed error -> {str(e)}")
         finally:

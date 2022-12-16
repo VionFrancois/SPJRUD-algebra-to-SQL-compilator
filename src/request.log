@@ -1,2 +1,4 @@
 Project([*],contacts)
 Project([*],contacts)
+Select(Country,=,Mali,Cities)
+Project([Name,Country],Cities)

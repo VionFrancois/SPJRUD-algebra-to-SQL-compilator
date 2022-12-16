@@ -115,8 +115,3 @@ if __name__ == "__main__":
     with open(LOG, "a") as file:
         for request in new_request:
             file.write(request + "\n")
-
-
-"""
-Constaté un bug, on peut delete le prompt
-"""
