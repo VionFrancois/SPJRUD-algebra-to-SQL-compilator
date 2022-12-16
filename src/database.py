@@ -56,7 +56,7 @@ class DataBase(object):
 
 
 
-class ArityException(Exception):
+class ColumnNameError(Exception):
     """
     S'occupe des exceptions dues à la validation de la requête
     """
@@ -65,8 +65,20 @@ class ArityException(Exception):
         self.entity = entity
         self.table = table
         self.db = db
-        super().__init__("Error occured with the arity of an element")
+        super().__init__("Error occured with an element")
 
     def __str__(self) -> str:
         return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\n"
         # TODO : Ajouter : "The table "+self.table+" contrains the attibutes : "+self.db.fetchAllAttributes(self.table)
+
+
+class TableNameError(Exception):
+
+    def __init__(self, table : str, db : DataBase):
+        self.table = table
+        self.db = db
+        super().init("Error occured with a table")
+
+    def __str__(self) -> str:
+        return "An error occured with the table : "+self.table+". The table does not exist in the database or is spelled incorrectly.\n"
+        # TODO : Ajouter la liste des tables ?
