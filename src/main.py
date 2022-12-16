@@ -29,7 +29,8 @@ Utils : EXECUTION -> python3 main.py file.db [-h]
                       When no more query can be requested, returning to the bottom of the file.
                   -> Queries in the SPJRUD format :
                      => SELECT     : Select(attribute, =|!=, constant, relation)
-                     => PROJECT    : Project([attribute1,...], relation)
+                     => PROJECT    : Project([attribute1,...], relation) 
+                        - Put '*' to project all attributes 
                      => JOIN       : Join(relation1, relation2)
                      => RENAME     : Rename(attribute, constant, relation)
                      => UNION      : Union(relation1, relation2)
@@ -103,9 +104,9 @@ if __name__ == "__main__":
             continue
         else:
             # Lancement du programme
-            tree = SyntaxTree(inp)
-            request = SyntaxTree.convertToSQL(tree.root)
-            print("\nConverted to SQL : " + request)
+            tree = SyntaxTree(inp, database)
+            request = SyntaxTree.convertToSQL(tree.root, database)
+            print("\nConverted to SQL : " + request[0])
             database.execute(request)
             database.display()
             if not inp in previous_request:

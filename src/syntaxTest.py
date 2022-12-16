@@ -17,6 +17,7 @@ def regex_test():
     assert syntax.syntax_is_correct(syntax.remove_space(f"Rename({FIRST_ATTRIBUTE}, {CONSTANT},{FIRST_RELATION})"))
     assert syntax.syntax_is_correct(syntax.remove_space(f"Union({FIRST_RELATION}, {SECOND_RELATION})"))
     assert syntax.syntax_is_correct(syntax.remove_space(f"Difference({FIRST_RELATION}, {SECOND_RELATION})"))
+    assert syntax.syntax_is_correct(syntax.remove_space(f"Project([*], {FIRST_RELATION})"))
     print("Test one passed.")
 
 #test 2
@@ -31,11 +32,12 @@ def global_test():
     db = DataBase("test.db")
     assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM contacts WHERE first_name = 'julien'"
     assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
+    #assert SyntaxTree.convertToSQL(SyntaxTree())
     print("Test three passed")
         
 
 
 if __name__ == "__main__":
+    regex_test()
+    check_error()
     global_test()
-    # regex_test()
-    # check_error()
