@@ -143,8 +143,8 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[3]):
                         subTree.right = Node(Relation(paramLst[3], db.fetchAllAttributes(paramLst[3]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[3], db)
                   
             case "Project":
 
@@ -156,8 +156,8 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[1], db)
                 
             case "Join":
 
@@ -168,16 +168,16 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[0]):
                         subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[0], db)
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[1], db)
 
             case "Rename":
 
@@ -189,8 +189,9 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[2]):
                         subTree.right = Node(Relation(paramLst[2], db.fetchAllAttributes(paramLst[2]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[2], db)
+
             case "Union":
 
                 subTree = Node(Entity("Union"))
@@ -200,16 +201,17 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[0]):
                         subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[0], db)
                         
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[1], db)
+
             case "Difference":
 
                 subTree = Node(Entity("Difference"))
@@ -219,15 +221,16 @@ class SyntaxTree():
                 else:
                     if db.verifyTable(paramLst[0]):
                         subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[0], db)
+
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
-                    # else:
-                        # raise ArityException() # TODO : Créer une arityexception pour les tables
+                    else:
+                        raise TableNameError(paramLst[1], db)
         return subTree
 
 
