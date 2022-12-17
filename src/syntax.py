@@ -9,7 +9,7 @@ from spjrud import *
 CONSTANT = r"[a-zA-Z0-9_]+"
 ATTRIBUTE = CONSTANT
 ATTRIBUTES_WITH_ALL = r"[a-zA-Z0-9_*,]+"
-RELATION = r"(([a-zA-Z0-9_]+)|([a-zA-Z]+\([a-z-A-Z0-9_\(\),]+\)))"
+RELATION = r"(([a-zA-Z0-9_]+)|([a-zA-Z]+\([a-z-A-Z0-9_\[\]\(\),]+\)))"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
 PROJECT = r"Project\(\["+ ATTRIBUTES_WITH_ALL +r"\]," + RELATION + r"\)"
@@ -28,16 +28,6 @@ def remove_space(s):
             res += i
     return res
 
-def find_closed_parenthesis(s):     
-    stack = []
-    for i in range(0, len(s)):
-        if(s[i] == '('):
-            stack.append(('(', i))
-        elif(s[i] == ')' and stack[-1][0] == 0):
-            return i
-        elif(s[i] == ')'):
-            stack.pop()
-
 def is_there_enough_parenthesis(s):
     stack = []
     for i in range(0,len(s)):
@@ -54,18 +44,39 @@ def is_there_enough_parenthesis(s):
         
     return (len(stack) , stack[-1][1])
 
-def search_under_request(s):
-    count_opened_parenthesis = 0
-    previous_parenthesis = 0
-    for i in range(0, len(s)):
-        if(count_opened_parenthesis == 2 and s[i] == '('):
-            return previous_parenthesis
-        if(s[i] == '('):
-            count_opened_parenthesis += 1
-            previous_parenthesis = i
-        elif(s[i] == ')'):
-            count_opened_parenthesis -= 1
-    return -1
+def search_sub_request(s):
+    para = s.find('(')
+    sub_requests = []
+    while para != -1:
+
+        beginning_of_the_request = s[:para]
+
+        if ',' in s[:para]:
+            for i in range(para, 0, -1):
+                if s[i] == ",":
+                    beginning_of_the_request = s[i + 1: para]
+                    break 
+    
+        stack = [('(', para)]
+        i = para + 1
+        u = 0
+        while  i < len(s) and len(stack) > 0:
+            if(s[i] == '('):
+                stack.append(('(', i))
+            elif s[i] == ')' and stack[-1][1] == para:
+                u = i 
+                sub_requests.append(beginning_of_the_request + s[para: i + 1])
+                break
+            elif s[i] == ')':
+                stack.pop()
+            i += 1
+
+        para = s[u:].find('(')
+        if para != -1:
+            para += i
+      
+    return sub_requests
+
 
 #On pose comme précondition que la chaine de caractère mise en argument
 #ne possède aucun espace
@@ -85,11 +96,10 @@ def syntax_is_correct(s):
         if(not answer):
             raise Exception(f"The part '{s}' is wrong.")
 
-        begin_of_the_request = search_under_request(s)
-        if begin_of_the_request != -1:
-            closed_indice = find_closed_parenthesis(s[begin_of_the_request:])
-            under_request = s[begin_of_the_request + 1: closed_indice + begin_of_the_request + 1]
-            answer = syntax_is_correct(under_request)                
+        first_paren = s.find('(')
+        for sub_request in search_sub_request(s[first_paren + 1:]):
+            answer = syntax_is_correct(sub_request)  
+
         return answer
     except Exception as e:
         print("Syntax error.", e)
@@ -98,18 +108,3 @@ def syntax_is_correct(s):
                 print(SPJRUD[i].__doc__)
         print("type python3 main.py -h for more information")
         return False
-
-def split(delim1, delim2, forbidden,s):
-    res = []
-    temp = ""
-    for i in range(0, len(s)):
-        if(s[i] == delim1 or s[i] == delim2):
-            res.append(temp)
-            temp = ""
-        else:
-            if(s[i] != forbidden and s[i] != ' '):
-                temp += s[i]
-    return res
-
-
-
