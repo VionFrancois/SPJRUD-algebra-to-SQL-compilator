@@ -25,7 +25,7 @@ class Request(object):
                 if(param[1] == "="):
                     obj = Select(Attribute(param[0]), Operation.EQUAL, Constant(param[2]), Relation(relation))
                 else:
-                    obj = Select(Attribute(param[0]), Operation.DIFFERENT, Constant(param[1]), Relation(relation))
+                    obj = Select(Attribute(param[0]), Operation.DIFFERENT, Constant(param[2]), Relation(relation))
             else:
                 e = ColumnNameError(param[0],table.name,db)
                 raise e
