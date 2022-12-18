@@ -48,6 +48,18 @@ class DataBase(object):
         connection.close()
         return True
 
+    def fetchAllTables(self):
+        connection = sqlite3.connect(self.file_name)
+        cursor = connection.cursor()
+        res = cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        data = res.fetchall()
+        tables = []
+        for i in range(len(data)):
+            tables.append(data[i][0])  
+
+        connection.close()
+        return tables
+
     def display(self):
         temp = Relation("resulting table", self.attributes, self.data)
         print(temp.__str__())
@@ -71,7 +83,7 @@ class ColumnNameError(Exception):
         for i in range(len(attrLst)):
             strg = strg +attrLst[i].name + " "
 
-        return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\n The table "+self.table+" contrains the attibutes : "+strg
+        return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\nThe table "+self.table+" contrains the attibutes : "+strg
 
 
 class TableNameError(Exception):
@@ -81,5 +93,8 @@ class TableNameError(Exception):
         self.db = db
 
     def __str__(self) -> str:
-        return "An error occured with the table : "+self.table+". The table does not exist in the database or is spelled incorrectly.\n"
-        # TODO : Ajouter la liste des tables ?
+        tbLst = self.db.fetchAllTables()
+        strg = ""
+        for i in range(len(tbLst)):
+            strg = strg +tbLst[i] + " "
+        return "An error occured with the table : "+self.table+". The table does not exist in the database or is spelled incorrectly.\nThe database contains the tables : "+strg
