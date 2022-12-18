@@ -34,12 +34,17 @@ def global_test():
     db = DataBase("test.db")
     assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM contacts WHERE first_name = 'julien'"
     assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
+    arbre = SyntaxTree("Select(Country,!=,Mali,Difference(cities,Project([Name,Country],cities)))",db)
+    arbre.root.display()
+    print(SyntaxTree.convertToSQL(arbre.root,db)[0])
+    assert SyntaxTree.convertToSQL(SyntaxTree("Select(Country,!=, Mali, Difference(Cities,Project([Name,Country], Cities)))",db).root,db)[0] == ""
+
     #assert SyntaxTree.convertToSQL(SyntaxTree())
     print("Test three passed")
         
 
 
 if __name__ == "__main__":
-    regex_test()
-    check_error()
+    # regex_test()
+    # check_error()
     global_test()

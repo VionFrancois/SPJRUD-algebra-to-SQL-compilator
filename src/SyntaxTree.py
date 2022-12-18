@@ -136,10 +136,10 @@ class SyntaxTree():
                 subTree = Node(Entity("Select"))
                 subTree.left = Node(Operator(paramLst[1])) # Opérateur
                 subTree.left.left = Node(Attribute(paramLst[0])) # Attribut
-                subTree.left.right = Node((Constant(paramLst[2]))) # Constante
+                subTree.left.right = Node(Constant(paramLst[2])) # Constante
 
                 if SyntaxTree.isSubRequest(paramLst[3]):
-                    subTree.right = SyntaxTree.makeTree(paramLst[3]) # Crée le sous arbre de la requête
+                    subTree.right = SyntaxTree.makeTree(paramLst[3], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[3]):
                         subTree.right = Node(Relation(paramLst[3], db.fetchAllAttributes(paramLst[3]))) # Relation (table)
@@ -152,7 +152,7 @@ class SyntaxTree():
                 subTree.left = Node(Attribute(paramLst[0])) # Attribut
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
-                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                    subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
@@ -164,15 +164,15 @@ class SyntaxTree():
                 subTree = Node(Entity("Join"))
 
                 if SyntaxTree.isSubRequest(paramLst[0]):
-                    subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
+                    subTree.left = SyntaxTree.makeTree(paramLst[0], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[0]):
-                        subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
+                        subTree.left = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[0], db)
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
-                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                    subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
@@ -185,7 +185,7 @@ class SyntaxTree():
                 subTree.left = Node(Entity(paramLst[0]+":"+paramLst[1])) # ancienNom:nouveauNom # TODO : Gérer ce cas
 
                 if SyntaxTree.isSubRequest(paramLst[2]):
-                    subTree.right = SyntaxTree.makeTree(paramLst[2]) # Crée le sous arbre de la requête
+                    subTree.left = SyntaxTree.makeTree(paramLst[2], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[2]):
                         subTree.right = Node(Relation(paramLst[2], db.fetchAllAttributes(paramLst[2]))) # Relation (table)
@@ -197,15 +197,15 @@ class SyntaxTree():
                 subTree = Node(Entity("Union"))
 
                 if SyntaxTree.isSubRequest(paramLst[0]):
-                    subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
+                    subTree.left = SyntaxTree.makeTree(paramLst[0], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[0]):
-                        subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
+                        subTree.left = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[0], db)
                         
                 if SyntaxTree.isSubRequest(paramLst[1]):
-                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                    subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
@@ -217,15 +217,15 @@ class SyntaxTree():
                 subTree = Node(Entity("Difference"))
 
                 if SyntaxTree.isSubRequest(paramLst[0]):
-                    subTree.left = SyntaxTree.makeTree(paramLst[0]) # Crée le sous arbre de la requête
+                    subTree.left = SyntaxTree.makeTree(paramLst[0], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[0]):
-                        subTree.right = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
+                        subTree.left = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[0], db)
 
                 if SyntaxTree.isSubRequest(paramLst[1]):
-                    subTree.right = SyntaxTree.makeTree(paramLst[1]) # Crée le sous arbre de la requête
+                    subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[1]):
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)

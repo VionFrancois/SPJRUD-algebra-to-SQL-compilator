@@ -10,8 +10,6 @@ class DataBase(object):
         self.data = None
         self.attributes = None
         
-    # TODO : Gérer le cas de rename dans le bas de l'arbre
-
     def execute(self, request):
         try:
             connection = sqlite3.connect(self.file_name)
