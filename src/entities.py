@@ -30,16 +30,11 @@ class Attribute(Entity):
     def __init__(self, name):
         super().__init__(name, 2)
 
-        # if(isinstance(relation ,Relation)):
-        #     self.relation = relation
-        # else:
-        #     raise InstanceError(relation, Relation) 
-
     def __eq__(self, obj):
         return isinstance(obj, Attribute) and obj.name == self.name
     
     def __str__(self):
-        return f"attribute : {self.name}"
+        return self.name
 
 
 
@@ -109,22 +104,6 @@ class Relation(Entity):
         s =f"\n{self.name}:\n\n" + "-" * (length + 1) + "\n" + s + "-" * (length + 1 )+ "\n"
         return s
         
-
-
-# class Attribute(Entity):
-#     """
-#     L'attribut doit avoir son nom et la relation à laquelle il appartient
-#     """
-#     def __init__(self, name, relation):
-#         super().__init__(name)
-
-#         if(isinstance(relation ,Relation)):
-#             self.relation = relation
-#         else:
-#             raise InstanceError(relation, Relation) 
-    
-#     def __str__(self):
-#         return f"attribute : {self.name}"
 
 
 class Constant(Entity):
