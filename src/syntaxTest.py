@@ -37,12 +37,16 @@ def global_test():
     # Project
     assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
     # Join
-    
+    assert SyntaxTree.convertToSQL(SyntaxTree("Join(cities,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) NATURAL JOIN (cities)"
     # Rename
     assert SyntaxTree.convertToSQL(SyntaxTree("Rename(Country,Pays,cities)",db).root,db)[0] == "SELECT Country AS 'Pays' FROM (cities)"
-
+    # Union
+    assert SyntaxTree.convertToSQL(SyntaxTree("Union(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) UNION SELECT * FROM (cities)"
+    # Difference
+    assert SyntaxTree.convertToSQL(SyntaxTree("Difference(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) EXCEPT SELECT * FROM (cities)"
     # Combiné
-    assert SyntaxTree.convertToSQL(SyntaxTree("Select(Population,!=,20,Difference(cities,Project([Name,Country],cities)))",db).root,db)[0] == "SELECT * FROM (SELECT * FROM (SELECT Name, Country FROM (cities)) EXCEPT SELECT * FROM (cities)) WHERE Population <> '20'"
+    assert SyntaxTree.convertToSQL(SyntaxTree("Select(firstName,=,julien,Project([firstName],Rename(first_name,firstName,Join(cities,contacts))))",db).root,db)[0] == "SELECT * FROM (SELECT firstName FROM (SELECT first_name AS 'firstName' FROM (SELECT * FROM (contacts) NATURAL JOIN (cities)))) WHERE firstName = 'julien'"
+
     print("Test three passed")
         
 

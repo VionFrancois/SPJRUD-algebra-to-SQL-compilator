@@ -182,10 +182,10 @@ class SyntaxTree():
             case "Rename":
 
                 subTree = Node(Entity("Rename"))
-                subTree.left = Node(Entity(paramLst[0]+":"+paramLst[1])) # ancienNom:nouveauNom # TODO : Gérer ce cas
+                subTree.left = Node(Entity(paramLst[0]+":"+paramLst[1])) # ancienNom:nouveauNom
 
                 if SyntaxTree.isSubRequest(paramLst[2]):
-                    subTree.left = SyntaxTree.makeTree(paramLst[2], db) # Crée le sous arbre de la requête
+                    subTree.right = SyntaxTree.makeTree(paramLst[2], db) # Crée le sous arbre de la requête
                 else:
                     if db.verifyTable(paramLst[2]):
                         subTree.right = Node(Relation(paramLst[2], db.fetchAllAttributes(paramLst[2]))) # Relation (table)

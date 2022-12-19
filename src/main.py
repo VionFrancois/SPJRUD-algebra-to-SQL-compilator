@@ -2,8 +2,8 @@
 fichier à éxécuter
 """
 from sys import argv
-from database import DataBase
-from request import Request
+from database import *
+from request import *
 import syntax
 from SyntaxTree import SyntaxTree
 
@@ -115,12 +115,21 @@ if __name__ == "__main__":
             else:
                 request = None
                 # Lancement du programme
-                tree = SyntaxTree(inp, database)
-                request = SyntaxTree.convertToSQL(tree.root, database)
-                print("\nConverted to SQL : " + request[0])
-                print()
-                database.execute(request[0])
-                database.display()
+                try:
+                    tree = SyntaxTree(inp, database)
+                    request = SyntaxTree.convertToSQL(tree.root, database)
+                    print("\nConverted to SQL : " + request[0])
+                    print()
+                    database.execute(request[0])
+                    database.display()
+                except TableNameError as e:
+                    print(e)
+                except ColumnNameError as e:
+                    print(e)
+                except CorrespondingException as e:
+                    print(e)
+
+
 
                 if not inp in previous_request:
                     new_request.append(inp)        

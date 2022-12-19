@@ -71,6 +71,12 @@ class Relation(Entity):
         else:
             return False
 
+    def sameAttributes(self, lst):
+        for attributes in lst:
+            if attributes not in self.attributes:
+                return False
+        return True
+
         
 
 
