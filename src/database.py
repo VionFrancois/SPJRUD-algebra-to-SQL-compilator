@@ -60,24 +60,25 @@ class DataBase(object):
         connection.close()
         return tables
 
-    def list_tables(self):
-        try:
-            connection = sqlite3.connect(self.file_name)
-            cursor = connection.cursor()
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-            tables = cursor.fetchall()
-            for table in tables:
-                print(f"{table[0]}", end = " ")
-            print()
-        except sqlite3.Error as error:
-            print("cannot list the tables because, ", error)
-        finally:
-            if connection:
-                connection.close()
+    # def list_tables(self):
+    #     try:
+    #         connection = sqlite3.connect(self.file_name)
+    #         cursor = connection.cursor()
+    #         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    #         tables = cursor.fetchall()
+    #         for table in tables:
+    #             print(f"{table[0]}", end = " ")
+    #         print()
+    #     except sqlite3.Error as error:
+    #         print("cannot list the tables because, ", error)
+    #     finally:
+    #         if connection:
+    #             connection.close()
 
          
 
     def display(self):
+        # TODO : Print toujours resulting table
         temp = Relation("resulting table", self.attributes, self.data)
         print(temp.__str__())
 

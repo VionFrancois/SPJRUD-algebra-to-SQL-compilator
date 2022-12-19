@@ -98,6 +98,11 @@ if __name__ == "__main__":
             continue
 
         if inp == "ls table":
+            tables = database.fetchAllTables()
+            for table in tables:
+                print(f"{table[0]}", end = " ")
+            print()
+
             database.list_tables()
 
         elif inp == "exit":
@@ -113,6 +118,7 @@ if __name__ == "__main__":
                 tree = SyntaxTree(inp, database)
                 request = SyntaxTree.convertToSQL(tree.root, database)
                 print("\nConverted to SQL : " + request[0])
+                print()
                 database.execute(request[0])
                 database.display()
 

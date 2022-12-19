@@ -32,11 +32,17 @@ def check_error():
 
 def global_test():
     db = DataBase("test.db")
-    assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM contacts WHERE first_name = 'julien'"
+    # Select
+    assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) WHERE first_name = 'julien'"
+    # Project
     assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
-    assert SyntaxTree.convertToSQL(SyntaxTree("Select(Population,!=,20,Difference(cities,Project([Name,Country],cities)))",db).root,db)[0] == "SELECT * FROM SELECT * FROM (SELECT Name, Country FROM (cities)) EXCEPT SELECT * FROM (cities) WHERE Population <> '20'"
+    # Join
+    
+    # Rename
+    assert SyntaxTree.convertToSQL(SyntaxTree("Rename(Country,Pays,cities)",db).root,db)[0] == "SELECT Country AS 'Pays' FROM (cities)"
 
-    #assert SyntaxTree.convertToSQL(SyntaxTree())
+    # Combiné
+    assert SyntaxTree.convertToSQL(SyntaxTree("Select(Population,!=,20,Difference(cities,Project([Name,Country],cities)))",db).root,db)[0] == "SELECT * FROM (SELECT * FROM (SELECT Name, Country FROM (cities)) EXCEPT SELECT * FROM (cities)) WHERE Population <> '20'"
     print("Test three passed")
         
 

@@ -58,11 +58,13 @@ class Request(object):
 
 
         elif self.type == "Rename":
-            if table.verifyAttribute(param[0]): # L'attribut existe dans la table
-                obj = Rename(Attribute(param[0]), Constant(param[1]), Relation(relation))
-                table.attributes[table.attributes.index(param[0])] = param[0] # Renomme l'attribut dans la relation
+            ind = param.index(":")
+            attribute = Attribute(param[:ind])
+            if table.verifyAttribute(attribute): # L'attribut existe dans la table
+                obj = Rename(attribute, Constant(param[(ind+1):]), Relation(relation))
+                table.attributes[table.attributes.index(attribute)] = Attribute(param[(ind+1):]) # Renomme l'attribut dans la relation
             else:
-                raise ColumnNameError(param[0].name, table.name, db)
+                raise ColumnNameError(attribute.name, table.name, db)
 
         elif self.type == "Union":
             obj = Union(Relation(relation), Relation(param[0]))
