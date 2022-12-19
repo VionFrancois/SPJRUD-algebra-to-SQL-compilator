@@ -35,6 +35,7 @@ Utils : EXECUTION -> python3 main.py file.db [-h]
                      => RENAME     : Rename(attribute, constant, relation)
                      => UNION      : Union(relation1, relation2)
                      => DIFFERENCE : Difference(relation1, relation2) 
+                  -> 'ls table' to list all the tables in the database.
                   -> 'exit' to exit the program
 
 !PREREQUISITE!
@@ -90,29 +91,33 @@ if __name__ == "__main__":
         while inp == "&" and pointer_file > 0:
             pointer_file -= 1
             inp = rlinput("-> ", previous_request[pointer_file])
-        
-        if inp == "exit":
-            break
 
         if pointer_file == 0 and inp == "&":
             print("no more request...returning to the bottom")
             pointer_file = len(previous_request)
             continue
 
-        inp = syntax.remove_space(inp)
-        if not syntax.syntax_is_correct(inp):
-            continue
-        else:
-            request = None
-            # Lancement du programme
-            tree = SyntaxTree(inp, database)
-            request = SyntaxTree.convertToSQL(tree.root, database)
-            print("\nConverted to SQL : " + request[0])
-            database.execute(request[0])
-            database.display()
+        if inp == "ls table":
+            database.list_tables()
 
-            if not inp in previous_request:
-                new_request.append(inp)        
+        elif inp == "exit":
+            break
+
+        else:
+            inp = syntax.remove_space(inp)
+            if not syntax.syntax_is_correct(inp):
+                continue
+            else:
+                request = None
+                # Lancement du programme
+                tree = SyntaxTree(inp, database)
+                request = SyntaxTree.convertToSQL(tree.root, database)
+                print("\nConverted to SQL : " + request[0])
+                database.execute(request[0])
+                database.display()
+
+                if not inp in previous_request:
+                    new_request.append(inp)        
     
     with open(LOG, "a") as file:
         for request in new_request:
