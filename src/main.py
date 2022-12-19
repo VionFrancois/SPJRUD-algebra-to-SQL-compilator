@@ -13,7 +13,7 @@ VERSION = 1
 
 def get_doc():
     res = f"""
-######WELCOME IN THE SPJURD COMPILER !######
+######WELCOME TO THE SPJURD COMPILER !######
 
 Creator : François Vion and Julien Ladeuze.
 Purpose : database course from the university of Mons.
@@ -99,11 +99,10 @@ if __name__ == "__main__":
 
         if inp == "ls table":
             tables = database.fetchAllTables()
+            print(f"Number : {len(tables)}\ntables :", end = " ")
             for table in tables:
-                print(f"{table[0]}", end = " ")
+                print(f"{table}", end = " ")
             print()
-
-            database.list_tables()
 
         elif inp == "exit":
             break
