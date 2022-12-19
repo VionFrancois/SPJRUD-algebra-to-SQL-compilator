@@ -14,7 +14,7 @@ class DataBase(object):
         try:
             connection = sqlite3.connect(self.file_name)
             cursor = connection.cursor()
-            res = cursor.execute(request[0])
+            res = cursor.execute(request)
             self.data = cursor.fetchall()
             self.attributes = [Attribute(att[0]) for att in cursor.description]
         except sqlite3.Error as e:

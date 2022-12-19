@@ -34,7 +34,7 @@ class Request(object):
             attributes = [Attribute(attribute) for attribute in param[1:len(param) - 1].split(",")]
             bool = True
             att = None
-            if attributes[0] == "*": # Cas où on veut tout projetter
+            if attributes[0].name == "*": # Cas où on veut tout projetter
                 obj = Project(attributes, Relation(relation))
             else:
                 for attribute in attributes:
@@ -53,8 +53,8 @@ class Request(object):
             obj = Join(Relation(relation), Relation(secondRel))
             # Fusionne les attributs des deux tables
             for i in range(len(secondRel)):
-                if secondRel.attributes[i] not in table.attributes:
-                    table.attributes.append(secondRel.attributes[i])
+                if secondRel not in table.attributes:
+                    table.attributes.append(secondRel)
 
 
         elif self.type == "Rename":

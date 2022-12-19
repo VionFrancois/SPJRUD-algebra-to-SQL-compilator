@@ -103,15 +103,14 @@ if __name__ == "__main__":
         if not syntax.syntax_is_correct(inp):
             continue
         else:
+            request = None
             # Lancement du programme
-            try:
-                tree = SyntaxTree(inp, database)
-                request = SyntaxTree.convertToSQL(tree.root, database)
-            except Exception as e:
-                print(e)
+            tree = SyntaxTree(inp, database)
+            request = SyntaxTree.convertToSQL(tree.root, database)
             print("\nConverted to SQL : " + request[0])
             database.execute(request[0])
             database.display()
+
             if not inp in previous_request:
                 new_request.append(inp)        
     

@@ -74,7 +74,7 @@ def search_sub_request(s):
         para = s[u:].find('(')
         if para != -1:
             para += i
-      
+            
     return sub_requests
 
 
