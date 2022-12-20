@@ -9,11 +9,11 @@ from spjrud import *
 CONSTANT = r"[a-zA-Z0-9_]+"
 ATTRIBUTE = CONSTANT
 ATTRIBUTES_WITH_ALL = r"[a-zA-Z0-9_*,]+"
-RELATION = r"(([a-zA-Z0-9_]+)|([a-zA-Z]+\([a-z-A-Z0-9_\[\]\(\),]+\)))"
+RELATION = r"(([a-zA-Z]+\([a-zA-Z0-9_,!=*\[\]\(\)]+)|([a-zA-Z0-9_]+))"
 
 SELECT = r"Select\("+ ATTRIBUTE +r",((=)|(!=))," + CONSTANT + r","+ RELATION + r"\)"
 PROJECT = r"Project\(\["+ ATTRIBUTES_WITH_ALL +r"\]," + RELATION + r"\)"
-JOIN = r"Join\(" + RELATION + r","+ RELATION + r"\)"
+JOIN = r"Join\((" + RELATION + r","+ RELATION + r")\)"
 RENAME = r"Rename\(" + ATTRIBUTE +r"," + CONSTANT +r"," + RELATION+ r"\)"
 UNION = r"Union\("+ RELATION+r"," + RELATION + r"\)"
 DIFFERENCE = r"Difference\("+ RELATION + r","+ RELATION +r"\)"
