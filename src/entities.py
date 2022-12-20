@@ -27,9 +27,9 @@ class Operator(Entity):
 
 class Attribute(Entity):
 
-    def __init__(self, name):
+    def __init__(self, name, ctype):
         super().__init__(name, 2)
-
+        self.type = ctype
     def __eq__(self, obj):
         return isinstance(obj, Attribute) and obj.name == self.name
     
@@ -115,6 +115,13 @@ class Relation(Entity):
 class Constant(Entity):
 
     def __init__(self, name):
+        if '.' in name and name.replace('.',1).isdigit():
+            self.type = float
+        elif name.replace('.',1).isdigit():
+            self.type = int
+        else:
+            self.type = str
+
         super().__init__(name, 3)
 
     def __str__(self):
