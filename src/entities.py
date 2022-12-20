@@ -27,11 +27,20 @@ class Operator(Entity):
 
 class Attribute(Entity):
 
-    def __init__(self, name, ctype):
+    def __init__(self, name, ctype = None):
+        if ctype is not None:
+            if '.' in ctype or ctype == "FLOAT":
+                self.ctype = "FLOAT"
+            elif ctype.isdigit() or ctype == "INTEGER":
+                self.ctype = "INTEGER"
+            else:
+                self.ctype = "TEXT"
+        else:
+            self.ctype = None
         super().__init__(name, 2)
-        self.type = ctype
+
     def __eq__(self, obj):
-        return isinstance(obj, Attribute) and obj.name == self.name and obj.Ctype == self.Ctype
+        return isinstance(obj, Attribute) and obj.name == self.name
     
     def __str__(self):
         return self.name
@@ -66,10 +75,17 @@ class Relation(Entity):
             raise InstanceError("the content of " + str(tuples), tuple)
 
     def verifyAttribute(self, attr : Attribute):
-        if attr in self.attributes:
-            return True
+        if attr.ctype is None:
+            if attr in self.attributes:
+                return True
+            else:
+                return False
         else:
-            return False
+            if attr in self.attributes:
+                if self.attributes[self.attributes.index(attr)].ctype == attr.ctype:
+                    return True
+                else:
+                    return False
 
     def sameAttributes(self, lst):
         for attributes in lst:
@@ -115,13 +131,6 @@ class Relation(Entity):
 class Constant(Entity):
 
     def __init__(self, name):
-        if '.' in name and name.replace('.',1).isdigit():
-            self.type = float
-        elif name.replace('.',1).isdigit():
-            self.type = int
-        else:
-            self.type = str
-
         super().__init__(name, 3)
 
     def __str__(self):

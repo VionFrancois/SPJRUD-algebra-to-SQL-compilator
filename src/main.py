@@ -118,10 +118,10 @@ if __name__ == "__main__":
                     print("\nConverted to SQL : " + request[0])
                     print()
                     database.execute(request[0])
-                    database.display() # TODO : Utile ?
+                    database.display()
                 except TableNameError as e:
                     print(e)
-                except ColumnNameError as e:
+                except ColumnError as e:
                     print(e)
                 except CorrespondingException as e:
                     print(e)

@@ -32,19 +32,19 @@ def check_error():
 
 def request():
     db = DataBase("test.db")
-    # Select
-    assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) WHERE first_name = 'julien'"
-    # Project
-    assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
-    # Join
-    assert SyntaxTree.convertToSQL(SyntaxTree("Join(cities,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) NATURAL JOIN (cities)"
-    # Rename
-    assert SyntaxTree.convertToSQL(SyntaxTree("Rename(Country,Pays,cities)",db).root,db)[0] == "SELECT Country AS 'Pays' FROM (cities)"
-    # Union
-    assert SyntaxTree.convertToSQL(SyntaxTree("Union(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) UNION SELECT * FROM (cities)"
-    # Difference
-    assert SyntaxTree.convertToSQL(SyntaxTree("Difference(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) EXCEPT SELECT * FROM (cities)"
-    # Combiné
+    # # Select
+    # assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) WHERE first_name = 'julien'"
+    # # Project
+    # assert SyntaxTree.convertToSQL(SyntaxTree("Project([first_name,contact_id],contacts)",db).root,db)[0] == "SELECT first_name, contact_id FROM (contacts)"
+    # # Join
+    # assert SyntaxTree.convertToSQL(SyntaxTree("Join(cities,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) NATURAL JOIN (cities)"
+    # # Rename
+    # assert SyntaxTree.convertToSQL(SyntaxTree("Rename(Country,Pays,cities)",db).root,db)[0] == "SELECT Country AS 'Pays' FROM (cities)"
+    # # Union
+    # assert SyntaxTree.convertToSQL(SyntaxTree("Union(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) UNION SELECT * FROM (cities)"
+    # # Difference
+    # assert SyntaxTree.convertToSQL(SyntaxTree("Difference(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) EXCEPT SELECT * FROM (cities)"
+    # # Combiné
     assert SyntaxTree.convertToSQL(SyntaxTree("Select(firstName,=,julien,Project([firstName],Rename(first_name,firstName,Join(cities,contacts))))",db).root,db)[0] == "SELECT * FROM (SELECT firstName FROM (SELECT first_name AS 'firstName' FROM (SELECT * FROM (contacts) NATURAL JOIN (cities)))) WHERE firstName = 'julien'"
     assert SyntaxTree.convertToSQL(SyntaxTree("Project([*],Select(Country,=,Belgium,Join(cities,Union(Select(contact_id,=,1,contacts),Select(contact_id,=,2,contacts)))))",db).root,db)[0] == "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (contacts) WHERE contact_id = '2') UNION SELECT * FROM (SELECT * FROM (contacts) WHERE contact_id = '1')) NATURAL JOIN (cities)) WHERE Country = 'Belgium')"
 

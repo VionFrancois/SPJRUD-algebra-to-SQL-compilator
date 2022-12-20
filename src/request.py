@@ -25,13 +25,17 @@ class Request(object):
 
         if self.type == "Select":
 
-            if table.verifyAttribute(Attribute(param[0])): # L'attribut existe dans la table
+            if table.verifyAttribute(Attribute(param[0],param[2])): # L'attribut existe dans la table et la constante est du bon type
                 if(param[1] == "="):
                     obj = Select(Attribute(param[0]), Operation.EQUAL, Constant(param[2]), Relation(relation))
                 else:
                     obj = Select(Attribute(param[0]), Operation.DIFFERENT, Constant(param[2]), Relation(relation))
             else:
-                e = ColumnNameError(param[0],table.name,db)
+                if not table.verifyAttribute(Attribute(param[0])): # Vérifie si c'est le nom de colonne ou le type qui est une erreur
+                    e = ColumnError(param[0],table.name,db)
+                else:
+                    e = ColumnError(param[0],table.name,db,param[2])
+
                 raise e
 
         elif self.type == "Project":
@@ -52,7 +56,7 @@ class Request(object):
                             newAttr.append(attribute)
                     table.attributes = newAttr
                 else:
-                    raise ColumnNameError(attribute.name, table.name, db)
+                    raise ColumnError(attribute.name, table.name, db)
 
         elif self.type == "Join":
             if not isSubRequest(param[0]): # Gère le cas où la relation est une feuille (table)
@@ -72,9 +76,9 @@ class Request(object):
             attribute = Attribute(param[:ind])
             if table.verifyAttribute(attribute): # L'attribut existe dans la table
                 obj = Rename(attribute, Constant(param[(ind+1):]), Relation(relation))
-                table.attributes[table.attributes.index(attribute)] = Attribute(param[(ind+1):]) # Renomme l'attribut dans la relation
+                table.attributes[table.attributes.index(attribute)] = Attribute(param[(ind+1):],table.attributes[table.attributes.index(attribute)].ctype) # Renomme l'attribut dans la relation
             else:
-                raise ColumnNameError(attribute.name, table.name, db)
+                raise ColumnError(attribute.name, table.name, db)
 
         elif self.type == "Union":
             if not isSubRequest(param[0]): # Gère le cas où la relation est une feuille (table)

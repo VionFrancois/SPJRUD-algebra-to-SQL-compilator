@@ -81,24 +81,33 @@ class DataBase(object):
 
 
 
-class ColumnNameError(Exception):
+class ColumnError(Exception):
     """
-    Gère les erreurs dûes au mauvais nom d'une attribut
+    Gère les erreurs dûes à un attribut
     """
 
-    def __init__(self, entity : str, table : str, db : DataBase) -> None:
+    def __init__(self, entity : str, table : str, db : DataBase, ctype = None) -> None:
         self.entity = entity
         self.table = table
         self.db = db
+        self.ctype = ctype
+        
+        if ctype is None: # Erreur dûe au nom de l'attribut
+            attrLst = self.db.fetchAllAttributes(self.table)
+            strg = ""
+            for i in range(len(attrLst)):
+                strg = strg +attrLst[i].name + " "
+
+            self.msg = "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\nThe table "+self.table+" contrains the attibutes : "+strg
+        else: # Erreur dûe au type d'une constante
+            attrLst = self.db.fetchAllAttributes(self.table)
+            type = attrLst[attrLst.index(Attribute(self.entity))].ctype
+            self.msg = "An error occured with the element : "+self.ctype+". The element does not match the expecting type of "+self.entity+" which is "+type
+
         super().__init__("Error occured with an element")
 
     def __str__(self) -> str:
-        attrLst = self.db.fetchAllAttributes(self.table)
-        strg = ""
-        for i in range(len(attrLst)):
-            strg = strg +attrLst[i].name + " "
-
-        return "An error occured with the element : "+self.entity+". The element does not exist in the table : "+self.table+" or is spelled incorrectly.\nThe table "+self.table+" contrains the attibutes : "+strg
+        return self.msg
 
 
 class TableNameError(Exception):
