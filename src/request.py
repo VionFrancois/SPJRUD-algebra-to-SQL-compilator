@@ -1,7 +1,6 @@
 from spjrud import *
 from entities import Attribute, Relation, Constant
 from database import *
-from SyntaxTree import *
 
 class Request(object):
     """

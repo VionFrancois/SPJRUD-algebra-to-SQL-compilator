@@ -1,6 +1,6 @@
+from request import Request
 from entities import *
 from spjrud import *
-from request import *
 from database import *
 
 class Node():
