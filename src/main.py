@@ -46,10 +46,9 @@ Utils : EXECUTION -> python3 main.py file.db [-h]
 
 #https://stackoverflow.com/questions/2533120/show-default-value-for-editing-on-python-input-possible/2533142#2533142
 def rlinput(prompt, prefill='test'):
-   print(prompt, end = "")
    readline.set_startup_hook(lambda: readline.insert_text(prefill))
    try:
-      return input()  # or raw_input in Python 2
+      return input(prompt)  # or raw_input in Python 2
    finally:
       readline.set_startup_hook()
 
@@ -85,8 +84,7 @@ if __name__ == "__main__":
     new_request = []
 
     while True:
-        print("-> ", end = "")
-        inp = input()
+        inp = input("-> ")
 
         while inp == "&" and pointer_file > 0:
             pointer_file -= 1
