@@ -37,7 +37,7 @@ class DataBase(object):
         data = res.fetchall()
         attributes = []
         for i in range(len(data)):
-            attributes.append(Attribute(data[i][1]))  
+            attributes.append(Attribute(data[i][1], data[i][2]))  
 
         connection.close()
         return attributes

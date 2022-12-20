@@ -27,11 +27,12 @@ class Operator(Entity):
 
 class Attribute(Entity):
 
-    def __init__(self, name):
+    def __init__(self, name, Ctype):
+        self.Ctype = Ctype # Column Type
         super().__init__(name, 2)
 
     def __eq__(self, obj):
-        return isinstance(obj, Attribute) and obj.name == self.name
+        return isinstance(obj, Attribute) and obj.name == self.name and obj.Ctype == self.Ctype
     
     def __str__(self):
         return self.name
