@@ -15,3 +15,5 @@ class FileException(Exception):
         if(self.details != ""):
             s += f"Details : \"{self.file}\" {self.details}"
         return s
+
+# TODO : Fusionner avec file.py ?

@@ -10,6 +10,9 @@ class DataBase(object):
         self.data = None
         self.attributes = None
         
+    '''
+    Execute une requête SQL sur la base de donnée
+    '''
     def execute(self, request):
         try:
             connection = sqlite3.connect(self.file_name)
@@ -23,6 +26,10 @@ class DataBase(object):
             cursor.close()
             connection.close()
 
+
+    '''
+    Retourne tout les attributs d'une table
+    '''
     def fetchAllAttributes(self, table):
         connection = sqlite3.connect(self.file_name)
         cursor = connection.cursor()
@@ -36,6 +43,9 @@ class DataBase(object):
         return attributes
 
 
+    '''
+    Vérifie l'existance d'une table dans la base de données
+    '''
     def verifyTable(self, table):
         connection = sqlite3.connect(self.file_name)
         cursor = connection.cursor()
@@ -48,6 +58,9 @@ class DataBase(object):
         connection.close()
         return True
 
+    '''
+    Retourne toutes les table de la base de données
+    '''
     def fetchAllTables(self):
         connection = sqlite3.connect(self.file_name)
         cursor = connection.cursor()
@@ -59,22 +72,6 @@ class DataBase(object):
 
         connection.close()
         return tables
-
-    # def list_tables(self):
-    #     try:
-    #         connection = sqlite3.connect(self.file_name)
-    #         cursor = connection.cursor()
-    #         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    #         tables = cursor.fetchall()
-    #         for table in tables:
-    #             print(f"{table[0]}", end = " ")
-    #         print()
-    #     except sqlite3.Error as error:
-    #         print("cannot list the tables because, ", error)
-    #     finally:
-    #         if connection:
-    #             connection.close()
-
          
 
     def display(self):
@@ -86,7 +83,7 @@ class DataBase(object):
 
 class ColumnNameError(Exception):
     """
-    S'occupe des exceptions dues à la validation de la requête
+    Gère les erreurs dûes au mauvais nom d'une attribut
     """
 
     def __init__(self, entity : str, table : str, db : DataBase) -> None:
@@ -105,7 +102,9 @@ class ColumnNameError(Exception):
 
 
 class TableNameError(Exception):
-
+    '''
+    Gère les erreurs dûes au mauvais nom d'une table
+    '''
     def __init__(self, table : str, db : DataBase):
         self.table = table
         self.db = db

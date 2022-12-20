@@ -14,10 +14,13 @@ class Request(object):
             if(Request_type == i):
                 self.type = Request_type
 
+    '''
+    Crée la requête SQL et la retourne avec la relation résultante
+    '''
     def make_request(self, param, relation : str, table : Relation, db : DataBase):
         # param = (attribut, constante, relation2, operation)
 
-        # On vérifie dans chaque cas l'arité des élements par rapport à la relation actuelle (table)     
+        # On vérifie dans chaque cas la validité des attributs par rapport à la relation actuelle (table)     
 
         if self.type == "Select":
 
@@ -40,14 +43,13 @@ class Request(object):
                     if not table.verifyAttribute(attribute):
                         bool = False
                 
-                if(bool): #Les attributs existent dans la table
+                if(bool): # Les attributs existent dans la table
                     obj = Project(attributes, Relation(relation))
                     newAttr = []
                     for attribute in table.attributes:
                         if attribute in attributes:
                             newAttr.append(attribute)
                     table.attributes = newAttr
-                    # table.attributes = [elem for elem in table.attributes if elem not in attributes]
                 else:
                     raise ColumnNameError(attribute.name, table.name, db)
 
@@ -70,17 +72,17 @@ class Request(object):
                 raise ColumnNameError(attribute.name, table.name, db)
 
         elif self.type == "Union":
-            if table.sameAttributes(param[1].attributes):
+            if table.sameAttributes(param[1].attributes): # Si les attributs sont les mêmes dans les deux relations
                 obj = Union(Relation(relation), Relation(param[0]))
             else:
                 raise CorrespondingException("Union", table, param[1])
         else:
-            if table.sameAttributes(param[1].attributes):
+            if table.sameAttributes(param[1].attributes): # Si les attributs sont les mêmes dans les deux relations
                 obj = Difference(Relation(relation), Relation(param[0]))
             else:
                 raise CorrespondingException("Difference", table, param[1])
 
-        self.sql = obj.convert_to_sql()
+        self.sql = obj.convert_to_sql() 
 
         return (self.sql, table)
 

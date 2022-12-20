@@ -30,7 +30,7 @@ def check_error():
     assert syntax.syntax_is_correct(syntax.remove_space(f"Select({FIRST_ATTRIBUTE}, {OPERATOR_DIF}, {CONSTANT}, Join(Join({FIRST_RELATION},{SECOND_RELATION}), error({FIRST_RELATION}, {SECOND_RELATION})))")) == False
     print("Test two passed.")
 
-def global_test():
+def request():
     db = DataBase("test.db")
     # Select
     assert SyntaxTree.convertToSQL(SyntaxTree("Select(first_name,=,julien,contacts)",db).root,db)[0] == "SELECT * FROM (contacts) WHERE first_name = 'julien'"
@@ -50,8 +50,10 @@ def global_test():
     print("Test three passed")
         
 
-
+'''
+Test unitaires 
+'''
 if __name__ == "__main__":
     # regex_test()
     # check_error()
-    global_test()
+    request()

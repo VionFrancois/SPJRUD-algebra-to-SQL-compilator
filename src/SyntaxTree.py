@@ -73,6 +73,9 @@ class SyntaxTree():
         self.root = SyntaxTree.makeTree(request,db)
 
     
+    '''
+    Vérifie si la requête en paramètre est une sous requête
+    '''
     def isSubRequest(request):
         keywords = ["Select(","Project(","Join(","Rename(","Union(","Difference("]
         rep = False
@@ -81,6 +84,9 @@ class SyntaxTree():
                 rep = True
         return rep
 
+    '''
+    Crée l'arbre de syntaxe recursivement à partir d'un string (suivant la bonne syntaxe)
+    '''
     def makeTree(requete : str, db : DataBase):
         # Récupération de l'opérateur
         i = 0
@@ -141,7 +147,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[3]):
                     subTree.right = SyntaxTree.makeTree(paramLst[3], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[3]):
+                    if db.verifyTable(paramLst[3]): # Vérification de l'existance de la table
                         subTree.right = Node(Relation(paramLst[3], db.fetchAllAttributes(paramLst[3]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[3], db)
@@ -154,7 +160,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[1]):
+                    if db.verifyTable(paramLst[1]): # Vérification de l'existance de la table
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[1], db)
@@ -166,15 +172,15 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[0]):
+                    if db.verifyTable(paramLst[0]): # Vérification de l'existance de la table
                         subTree.left = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[0], db)
 
-                if SyntaxTree.isSubRequest(paramLst[1]):
+                if SyntaxTree.isSubRequest(paramLst[1]): 
                     subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[1]):
+                    if db.verifyTable(paramLst[1]): # Vérification de l'existance de la table
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[1], db)
@@ -187,7 +193,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[2]):
                     subTree.right = SyntaxTree.makeTree(paramLst[2], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[2]):
+                    if db.verifyTable(paramLst[2]): # Vérification de l'existance de la table
                         subTree.right = Node(Relation(paramLst[2], db.fetchAllAttributes(paramLst[2]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[2], db)
@@ -199,7 +205,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[0]):
+                    if db.verifyTable(paramLst[0]): # Vérification de l'existance de la table
                         subTree.left = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[0], db)
@@ -207,7 +213,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[1]):
+                    if db.verifyTable(paramLst[1]): # Vérification de l'existance de la table
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[1], db)
@@ -219,7 +225,7 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[0]):
                     subTree.left = SyntaxTree.makeTree(paramLst[0], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[0]):
+                    if db.verifyTable(paramLst[0]): # Vérification de l'existance de la table
                         subTree.left = Node(Relation(paramLst[0], db.fetchAllAttributes(paramLst[0]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[0], db)
@@ -227,13 +233,16 @@ class SyntaxTree():
                 if SyntaxTree.isSubRequest(paramLst[1]):
                     subTree.right = SyntaxTree.makeTree(paramLst[1], db) # Crée le sous arbre de la requête
                 else:
-                    if db.verifyTable(paramLst[1]):
+                    if db.verifyTable(paramLst[1]): # Vérification de l'existance de la table
                         subTree.right = Node(Relation(paramLst[1], db.fetchAllAttributes(paramLst[1]))) # Relation (table)
                     else:
                         raise TableNameError(paramLst[1], db)
         return subTree
 
 
+    '''
+    Convertit recursivement un SyntaxTree en une requête SQL (string) en effectuant un parcours postordre
+    '''
     def convertToSQL(arbre : Node, db : DataBase):
         # Cas de base : L'arbre est une feuille et retourne son élément
         # Cas de récurrence : L'arbre n'est pas une feuille et est donc une expression ou un opérateur
@@ -244,18 +253,23 @@ class SyntaxTree():
                 return (arbre.entity.name, arbre.entity)
             else:
                 return arbre.entity.name
-        else:
-            left = SyntaxTree.convertToSQL(arbre.left, db)
-            right = SyntaxTree.convertToSQL(arbre.right, db)
+        
+        else: # Si c'est un noeud interne
+            left = SyntaxTree.convertToSQL(arbre.left, db) # Convertit le sous-arbre gauche
+            right = SyntaxTree.convertToSQL(arbre.right, db) # Convertit le sous-arbre droitr
             
+            # Traite le noeud actuel
             racine = arbre.entity
+
             # Cas où le noeud interne est l'opération = ou != de Select
-            # TODO : Gérer ce cas
             if racine.name == "=" or racine.name == "!=":
                 return (left, racine.name, right)
             else:
                 request = Request(arbre.entity.name)
-                return request.make_request(left,right[0],right[1],db)
+                return request.make_request(left,right[0],right[1],db) # Retourne la requête avec la relation résultante
 
+    ''''
+    Permet d'afficher l'arbre syntaxique dans le terminal
+    '''
     def display(self):
         self.root.display()
