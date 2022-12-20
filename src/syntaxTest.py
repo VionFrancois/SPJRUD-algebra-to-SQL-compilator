@@ -46,7 +46,9 @@ def request():
     assert SyntaxTree.convertToSQL(SyntaxTree("Difference(cities,cities)",db).root,db)[0] == "SELECT * FROM (cities) EXCEPT SELECT * FROM (cities)"
     # Combiné
     assert SyntaxTree.convertToSQL(SyntaxTree("Select(firstName,=,julien,Project([firstName],Rename(first_name,firstName,Join(cities,contacts))))",db).root,db)[0] == "SELECT * FROM (SELECT firstName FROM (SELECT first_name AS 'firstName' FROM (SELECT * FROM (contacts) NATURAL JOIN (cities)))) WHERE firstName = 'julien'"
-
+    assert SyntaxTree.convertToSQL(SyntaxTree("Project([*],Select(Country,=,Belgium,Join(cities,Union(Select(contact_id,=,1,contacts),Select(contact_id,=,2,contacts)))))",db).root,db)[0] == "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (contacts) WHERE contact_id = '2') UNION SELECT * FROM (SELECT * FROM (contacts) WHERE contact_id = '1')) NATURAL JOIN (cities)) WHERE Country = 'Belgium')"
+    arbre = SyntaxTree("Project([*],Select(Country,=,Belgium,Join(cities,Union(Select(contact_id,=,1,contacts),Select(contact_id,=,2,contacts)))))",db)
+    arbre.display()
     print("Test three passed")
         
 

@@ -1,6 +1,7 @@
 from spjrud import *
 from entities import Attribute, Relation, Constant
 from database import *
+from SyntaxTree import *
 
 class Request(object):
     """
@@ -19,6 +20,7 @@ class Request(object):
     '''
     def make_request(self, param, relation : str, table : Relation, db : DataBase):
         # param = (attribut, constante, relation2, operation)
+        # param = (string, relation) dans le cas de join, union, difference
 
         # On vérifie dans chaque cas la validité des attributs par rapport à la relation actuelle (table)     
 
@@ -54,12 +56,16 @@ class Request(object):
                     raise ColumnNameError(attribute.name, table.name, db)
 
         elif self.type == "Join":
+            if not isSubRequest(param[0]): # Gère le cas où la relation est une feuille (table)
+                param = (param[0],Relation(param[0]))
+                param[1].attributes = db.fetchAllAttributes(param[0])
+            
             secondRel = param[0]
             obj = Join(Relation(relation), Relation(secondRel))
             # Fusionne les attributs des deux tables
-            for i in range(len(secondRel)):
-                if secondRel not in table.attributes:
-                    table.attributes.append(secondRel)
+            for attribute in param[1].attributes:
+                if attribute not in table.attributes:
+                    table.attributes.append(attribute)
 
 
         elif self.type == "Rename":
@@ -72,13 +78,22 @@ class Request(object):
                 raise ColumnNameError(attribute.name, table.name, db)
 
         elif self.type == "Union":
+            if not isSubRequest(param[0]): # Gère le cas où la relation est une feuille (table)
+                param = (param[0],Relation(param[0]))
+                param[1].attributes = db.fetchAllAttributes(param[0])
+
             if table.sameAttributes(param[1].attributes): # Si les attributs sont les mêmes dans les deux relations
                 obj = Union(Relation(relation), Relation(param[0]))
             else:
                 raise CorrespondingException("Union", table, param[1])
+
         else:
+            if not isSubRequest(param[0]): # Gère le cas où la relation est une feuille (table)
+                param = (param[0],Relation(param[0]))
+                param[1].attributes = db.fetchAllAttributes(param[0])
+
             if table.sameAttributes(param[1].attributes): # Si les attributs sont les mêmes dans les deux relations
-                obj = Difference(Relation(relation), Relation(param[0]))
+                obj = Difference(Relation(param[0]), Relation(relation))
             else:
                 raise CorrespondingException("Difference", table, param[1])
 
@@ -109,3 +124,15 @@ class CorrespondingException(Exception):
             strg2 = strg2 +attrLst2[i].name + " "
 
         return "An error occured with the operation "+self.operation+". The attributes in the relations does not match.\nThe first relation has the attributes : "+strg1+"and the second relation has the attributes : "+strg2
+
+
+'''
+Vérifie si la requête en paramètre est une sous requête
+'''
+def isSubRequest(request):
+    keywords = ["SELECT","PROJECT","NATURAL JOIN","AS","UNION","FROM"]
+    rep = False
+    for i in range(len(keywords)):
+        if keywords[i] in request:
+            rep = True
+    return rep
