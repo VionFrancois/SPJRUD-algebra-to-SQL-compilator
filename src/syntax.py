@@ -89,7 +89,8 @@ def syntax_is_correct(s):
             raise Exception(f"The parenthesis at index {last_parenthesis} is not closed:\n{s}\n" + " "*(last_parenthesis) + "^")
         answer = False
         for i in SPJRUD_REGEX:
-            if(re.match(i, s) != None):
+            if(re.match(i, s) != None and s[::-1].find(')') == 0):
+
                 answer = True
                 break
 
@@ -102,9 +103,9 @@ def syntax_is_correct(s):
 
         return answer
     except Exception as e:
-        print("Syntax error.", e)
+        print(f"Syntax error.", e)
         for i in SPJRUD:
             if i in s:
-                print(SPJRUD[i].__doc__)
-        print("type python3 main.py -h for more information")
+                print(SPJRUD[i].__doc__ )
+        print("Type python3 main.py -h for more information.")
         return False
