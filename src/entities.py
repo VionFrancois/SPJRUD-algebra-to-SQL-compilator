@@ -91,6 +91,10 @@ class Relation(Entity):
         for attributes in lst:
             if attributes not in self.attributes:
                 return False
+        for attributes in self.attributes:
+            if attributes not in lst:
+                return False
+                
         return True
 
         
