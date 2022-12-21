@@ -67,7 +67,8 @@ class Request(object):
             obj = Join(Relation(relation), Relation(secondRel))
             # Fusionne les attributs des deux tables
             for attribute in param[1].attributes:
-                if attribute not in table.attributes:
+                # Vérifie si un attribut existe déjà dans la relation et si cet attribut est du même type que celui qu'on veut rajouter
+                if attribute not in table.attributes or (attribute in table.attributes and attribute.ctype != table.attributes[table.attributes.index(attribute)].ctype):
                     table.attributes.append(attribute)
 
 
