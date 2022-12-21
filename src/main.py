@@ -45,7 +45,7 @@ Utils : EXECUTION -> python3 main.py file.db [-h]
 
 
 #https://stackoverflow.com/questions/2533120/show-default-value-for-editing-on-python-input-possible/2533142#2533142
-def rlinput(prompt, prefill='test'):
+def rlinput(prompt, prefill):
    readline.set_startup_hook(lambda: readline.insert_text(prefill))
    try:
       return input(prompt)  # or raw_input in Python 2
@@ -95,7 +95,7 @@ if __name__ == "__main__":
             pointer_file = len(previous_request)
             continue
 
-        if inp == "ls table":
+        elif inp == "ls table":
             tables = database.fetchAllTables()
             print(f"Number : {len(tables)}\ntables :", end = " ")
             for table in tables:

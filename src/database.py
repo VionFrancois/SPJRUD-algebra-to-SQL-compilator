@@ -22,6 +22,7 @@ class DataBase(object):
             self.attributes = [Attribute(att[0]) for att in cursor.description]
         except sqlite3.Error as e:
             print(f"The request '{request}' has failed\nDetailed error -> {str(e)}")
+            raise Exception("")
         finally:
             cursor.close()
             connection.close()
