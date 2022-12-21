@@ -125,6 +125,8 @@ if __name__ == "__main__":
                     print(e)
                 except CorrespondingException as e:
                     print(e)
+                except Exception as e:
+                    print(e)
 
 
 

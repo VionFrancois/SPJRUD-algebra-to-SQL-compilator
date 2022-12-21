@@ -74,9 +74,15 @@ class Request(object):
         elif self.type == "Rename":
             ind = param.index(":")
             attribute = Attribute(param[:ind])
+            newName = param[(ind+1):]
             if table.verifyAttribute(attribute): # L'attribut existe dans la table
-                obj = Rename(attribute, Constant(param[(ind+1):]), Relation(relation))
-                table.attributes[table.attributes.index(attribute)] = Attribute(param[(ind+1):],table.attributes[table.attributes.index(attribute)].ctype) # Renomme l'attribut dans la relation
+                if not table.verifyAttribute(Attribute(newName)): # Vérifie s'il n'y a pas déjà une colonne avec ce nom
+                    obj = Rename(attribute, Constant(newName), Relation(relation))
+                    table.attributes[table.attributes.index(attribute)] = Attribute(newName,table.attributes[table.attributes.index(attribute)].ctype) # Renomme l'attribut dans la relation
+                else:
+                    msg = "An error occured with the rename of "+attribute.name+" to "+newName+" because the table "+table.name+" already contains a column named "+newName
+                    error = Exception(msg)
+                    raise error
             else:
                 raise ColumnError(attribute.name, table.name, db)
 
