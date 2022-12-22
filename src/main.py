@@ -37,6 +37,7 @@ Utils : EXECUTION -> python3 main.py file.db [-h]
                      => DIFFERENCE : Difference(relation1, relation2) 
                   -> 'ls table' to list all the tables in the database.
                   -> 'exit' to exit the program
+                  -> 'displayTree' after you typed a request.
 
 !PREREQUISITE!
  Python must have the version : 3.10
@@ -44,7 +45,6 @@ Utils : EXECUTION -> python3 main.py file.db [-h]
     return res
 
 
-#https://stackoverflow.com/questions/2533120/show-default-value-for-editing-on-python-input-possible/2533142#2533142
 def rlinput(prompt, prefill):
    readline.set_startup_hook(lambda: readline.insert_text(prefill))
    try:
