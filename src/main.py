@@ -102,7 +102,7 @@ if __name__ == "__main__":
                 print(f"{table}", end = " ")
             print()
 
-        if inp == "displayTree":
+        elif inp == "displayTree":
             if tree is not None:
                 tree.display()
             else:
