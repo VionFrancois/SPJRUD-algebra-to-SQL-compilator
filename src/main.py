@@ -82,7 +82,7 @@ if __name__ == "__main__":
     pointer_file = len(previous_request)
 
     new_request = []
-
+    tree = None
     while True:
         inp = input("-> ")
 
@@ -101,6 +101,12 @@ if __name__ == "__main__":
             for table in tables:
                 print(f"{table}", end = " ")
             print()
+
+        if inp == "displayTree":
+            if tree is not None:
+                tree.display()
+            else:
+                print("Make a valid request before making this command")
 
         elif inp == "exit":
             break
