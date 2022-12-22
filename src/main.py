@@ -5,7 +5,7 @@ from sys import argv
 from database import *
 from request import *
 import syntax
-from SyntaxTree import SyntaxTree
+from syntaxTree import SyntaxTree
 
 import readline #utilisé pour remplir l'input avec les précédentes requêtes
 
